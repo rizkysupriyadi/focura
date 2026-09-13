@@ -12,8 +12,6 @@
         "deploying-to-cloud",
         "laravel-best-practices",
         "testing-best-practices",
-        "wayfinder-development",
-        "inertia-vue-development",
         "tailwindcss-development"
     ]
 }
