@@ -8,7 +8,6 @@ import {
     useRoute,
     useRouter,
 } from 'vue-router';
-
 import { AuthApiError } from '@/services/auth';
 import { useAuth } from '@/composables/useAuth';
 
@@ -24,6 +23,9 @@ const name = ref('');
 const email = ref('');
 const password = ref('');
 const passwordConfirmation = ref('');
+
+const showPassword = ref(false);
+const showPasswordConfirmation = ref(false);
 
 const formError = ref<string | null>(null);
 const nameError = ref<string | null>(null);
@@ -153,27 +155,11 @@ async function submit(): Promise<void> {
 
 <template>
     <main
-        class="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100"
+        class="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100"
     >
         <div
             class="mx-auto flex min-h-screen max-w-md flex-col px-6 py-8 sm:px-8"
         >
-            <header class="flex items-center justify-between">
-                <RouterLink
-                    to="/"
-                    class="text-xl font-semibold tracking-tight"
-                >
-                    Focura
-                </RouterLink>
-
-                <RouterLink
-                    to="/"
-                    class="text-sm font-medium text-slate-500 dark:text-slate-400 transition hover:text-slate-900 dark:hover:text-slate-100"
-                >
-                    Back
-                </RouterLink>
-            </header>
-
             <section
                 class="flex flex-1 flex-col justify-center py-12"
             >
@@ -223,9 +209,13 @@ async function submit(): Promise<void> {
                             v-model="name"
                             type="text"
                             autocomplete="name"
-                            class="mt-2 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 outline-none transition placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
                             placeholder="Your name"
-                            :aria-invalid="nameError ? 'true' : 'false'"
+                            :aria-invalid="
+                                nameError
+                                    ? 'true'
+                                    : 'false'
+                            "
                             :aria-describedby="
                                 nameError
                                     ? 'register-name-error'
@@ -256,9 +246,13 @@ async function submit(): Promise<void> {
                             type="email"
                             autocomplete="email"
                             inputmode="email"
-                            class="mt-2 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 outline-none transition placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
                             placeholder="you@example.com"
-                            :aria-invalid="emailError ? 'true' : 'false'"
+                            :aria-invalid="
+                                emailError
+                                    ? 'true'
+                                    : 'false'
+                            "
                             :aria-describedby="
                                 emailError
                                     ? 'register-email-error'
@@ -283,20 +277,93 @@ async function submit(): Promise<void> {
                             Password
                         </label>
 
-                        <input
-                            id="register-password"
-                            v-model="password"
-                            type="password"
-                            autocomplete="new-password"
-                            class="mt-2 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 outline-none transition placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                            placeholder="At least 8 characters"
-                            :aria-invalid="passwordError ? 'true' : 'false'"
-                            :aria-describedby="
-                                passwordError
-                                    ? 'register-password-error'
-                                    : undefined
-                            "
-                        />
+                        <div class="relative mt-2">
+                            <input
+                                id="register-password"
+                                v-model="password"
+                                :type="
+                                    showPassword
+                                        ? 'text'
+                                        : 'password'
+                                "
+                                autocomplete="new-password"
+                                class="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 pr-11 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
+                                placeholder="At least 8 characters"
+                                :aria-invalid="
+                                    passwordError
+                                        ? 'true'
+                                        : 'false'
+                                "
+                                :aria-describedby="
+                                    passwordError
+                                        ? 'register-password-error'
+                                        : undefined
+                                "
+                            />
+
+                            <button
+                                type="button"
+                                class="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-slate-400 transition hover:text-slate-600 focus:outline-none focus-visible:text-blue-600 dark:text-slate-500 dark:hover:text-slate-300 dark:focus-visible:text-blue-400"
+                                :aria-label="
+                                    showPassword
+                                        ? 'Hide password'
+                                        : 'Show password'
+                                "
+                                :aria-pressed="showPassword"
+                                @click="
+                                    showPassword =
+                                        !showPassword
+                                "
+                            >
+                                <svg
+                                    v-if="!showPassword"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="h-5 w-5"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                                    />
+                                    <circle
+                                        cx="12"
+                                        cy="12"
+                                        r="2.5"
+                                    />
+                                </svg>
+
+                                <svg
+                                    v-else
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="h-5 w-5"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M3 3l18 18"
+                                    />
+                                    <path
+                                        d="M10.6 5.1A10.8 10.8 0 0 1 12 5c6 0 9.5 7 9.5 7a16.5 16.5 0 0 1-3.2 3.9"
+                                    />
+                                    <path
+                                        d="M6.7 6.7C3.8 8.4 2.5 12 2.5 12a16.8 16.8 0 0 0 5.3 5.2A9.6 9.6 0 0 0 12 19c1 0 1.9-.2 2.7-.5"
+                                    />
+                                    <path
+                                        d="M9.9 9.9a3 3 0 0 0 4.2 4.2"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
 
                         <p
                             v-if="passwordError"
@@ -315,24 +382,95 @@ async function submit(): Promise<void> {
                             Confirm password
                         </label>
 
-                        <input
-                            id="register-password-confirmation"
-                            v-model="passwordConfirmation"
-                            type="password"
-                            autocomplete="new-password"
-                            class="mt-2 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 outline-none transition placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                            placeholder="Repeat your password"
-                            :aria-invalid="
-                                passwordConfirmationError
-                                    ? 'true'
-                                    : 'false'
-                            "
-                            :aria-describedby="
-                                passwordConfirmationError
-                                    ? 'register-password-confirmation-error'
-                                    : undefined
-                            "
-                        />
+                        <div class="relative mt-2">
+                            <input
+                                id="register-password-confirmation"
+                                v-model="passwordConfirmation"
+                                :type="
+                                    showPasswordConfirmation
+                                        ? 'text'
+                                        : 'password'
+                                "
+                                autocomplete="new-password"
+                                class="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 pr-11 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
+                                placeholder="Repeat your password"
+                                :aria-invalid="
+                                    passwordConfirmationError
+                                        ? 'true'
+                                        : 'false'
+                                "
+                                :aria-describedby="
+                                    passwordConfirmationError
+                                        ? 'register-password-confirmation-error'
+                                        : undefined
+                                "
+                            />
+
+                            <button
+                                type="button"
+                                class="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-slate-400 transition hover:text-slate-600 focus:outline-none focus-visible:text-blue-600 dark:text-slate-500 dark:hover:text-slate-300 dark:focus-visible:text-blue-400"
+                                :aria-label="
+                                    showPasswordConfirmation
+                                        ? 'Hide password confirmation'
+                                        : 'Show password confirmation'
+                                "
+                                :aria-pressed="
+                                    showPasswordConfirmation
+                                "
+                                @click="
+                                    showPasswordConfirmation =
+                                        !showPasswordConfirmation
+                                "
+                            >
+                                <svg
+                                    v-if="!showPasswordConfirmation"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="h-5 w-5"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                                    />
+                                    <circle
+                                        cx="12"
+                                        cy="12"
+                                        r="2.5"
+                                    />
+                                </svg>
+
+                                <svg
+                                    v-else
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="h-5 w-5"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M3 3l18 18"
+                                    />
+                                    <path
+                                        d="M10.6 5.1A10.8 10.8 0 0 1 12 5c6 0 9.5 7 9.5 7a16.5 16.5 0 0 1-3.2 3.9"
+                                    />
+                                    <path
+                                        d="M6.7 6.7C3.8 8.4 2.5 12 2.5 12a16.8 16.8 0 0 0 5.3 5.2A9.6 9.6 0 0 0 12 19c1 0 1.9-.2 2.7-.5"
+                                    />
+                                    <path
+                                        d="M9.9 9.9a3 3 0 0 0 4.2 4.2"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
 
                         <p
                             v-if="passwordConfirmationError"
@@ -360,6 +498,7 @@ async function submit(): Promise<void> {
                     class="mt-7 text-center text-sm text-slate-500 dark:text-slate-400"
                 >
                     Already have an account?
+
                     <RouterLink
                         :to="{
                             name: 'login',
