@@ -21,7 +21,11 @@ interface NavigationItem {
 const route = useRoute();
 const router = useRouter();
 
-const { user, logout, isLoading } = useAuth();
+const {
+    user,
+    logout,
+    isLoading,
+} = useAuth();
 
 const isAccountMenuOpen = ref(false);
 const isMobileMenuOpen = ref(false);
@@ -58,11 +62,19 @@ const activeRouteName = computed(() => {
     return route.name;
 });
 
+const isGuest = computed(() => {
+    return user.value === null;
+});
+
+const accountLabel = computed(() => {
+    return user.value?.name?.trim() || 'Guest';
+});
+
 const userInitials = computed(() => {
     const name = user.value?.name?.trim() ?? '';
 
     if (!name) {
-        return 'U';
+        return 'G';
     }
 
     const parts = name
@@ -70,7 +82,9 @@ const userInitials = computed(() => {
         .filter(Boolean);
 
     if (parts.length === 1) {
-        return parts[0].slice(0, 2).toUpperCase();
+        return parts[0]
+            .slice(0, 2)
+            .toUpperCase();
     }
 
     return (
@@ -79,7 +93,12 @@ const userInitials = computed(() => {
 });
 
 function toggleAccountMenu(): void {
-    isAccountMenuOpen.value = !isAccountMenuOpen.value;
+    isAccountMenuOpen.value =
+        !isAccountMenuOpen.value;
+
+    if (isAccountMenuOpen.value) {
+        closeMobileMenu();
+    }
 }
 
 function closeAccountMenu(): void {
@@ -87,7 +106,8 @@ function closeAccountMenu(): void {
 }
 
 function toggleMobileMenu(): void {
-    isMobileMenuOpen.value = !isMobileMenuOpen.value;
+    isMobileMenuOpen.value =
+        !isMobileMenuOpen.value;
 
     if (isMobileMenuOpen.value) {
         closeAccountMenu();
@@ -103,24 +123,29 @@ function closeAllMenus(): void {
     closeMobileMenu();
 }
 
-function handleDocumentClick(event: MouseEvent): void {
+function handleDocumentClick(
+    event: MouseEvent,
+): void {
     const target = event.target;
 
     if (!(target instanceof Node)) {
         return;
     }
 
-    const accountMenu = document.getElementById(
-        'focura-account-menu',
-    );
+    const accountMenu =
+        document.getElementById(
+            'focura-account-menu',
+        );
 
-    const mobileMenu = document.getElementById(
-        'focura-mobile-menu',
-    );
+    const mobileMenu =
+        document.getElementById(
+            'focura-mobile-menu',
+        );
 
-    const mobileMenuButton = document.getElementById(
-        'focura-mobile-menu-button',
-    );
+    const mobileMenuButton =
+        document.getElementById(
+            'focura-mobile-menu-button',
+        );
 
     if (
         accountMenu &&
@@ -151,19 +176,24 @@ function handleDocumentClick(event: MouseEvent): void {
     }
 }
 
-function handleKeydown(event: KeyboardEvent): void {
+function handleKeydown(
+    event: KeyboardEvent,
+): void {
     if (event.key === 'Escape') {
         closeAllMenus();
     }
 }
 
 function handleNavigation(): void {
-    closeMobileMenu();
-    closeAccountMenu();
+    closeAllMenus();
 }
 
 async function handleLogout(): Promise<void> {
-    if (isLoggingOut.value || isLoading.value) {
+    if (
+        isGuest.value ||
+        isLoggingOut.value ||
+        isLoading.value
+    ) {
         return;
     }
 
@@ -208,7 +238,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-white dark:bg-slate-950">
+    <div
+        class="min-h-screen bg-white dark:bg-slate-950"
+    >
         <nav
             class="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950"
             aria-label="Main navigation"
@@ -216,7 +248,7 @@ onBeforeUnmount(() => {
             <div
                 class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8"
             >
-                <!-- Desktop / Mobile Logo -->
+                <!-- Logo -->
                 <RouterLink
                     to="/"
                     class="shrink-0 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100"
@@ -238,21 +270,25 @@ onBeforeUnmount(() => {
                             :key="item.name"
                             :to="{ name: item.name }"
                             :aria-current="
-                                activeRouteName === item.name
+                                activeRouteName ===
+                                item.name
                                     ? 'page'
                                     : undefined
                             "
                             :title="item.description"
                             class="flex min-h-10 shrink-0 items-center justify-center rounded-lg px-3 py-2 text-sm font-medium transition-colors sm:px-4"
                             :class="
-                                activeRouteName === item.name
+                                activeRouteName ===
+                                item.name
                                     ? 'bg-white text-blue-600 shadow-sm ring-1 ring-slate-200 dark:bg-slate-950 dark:ring-slate-700'
                                     : 'text-slate-500 hover:bg-white hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100'
                             "
                         >
-                            <!-- Focus Icon -->
+                            <!-- Focus -->
                             <svg
-                                v-if="item.name === 'focus'"
+                                v-if="
+                                    item.name === 'focus'
+                                "
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -273,9 +309,12 @@ onBeforeUnmount(() => {
                                 />
                             </svg>
 
-                            <!-- Sessions Icon -->
+                            <!-- Sessions -->
                             <svg
-                                v-else-if="item.name === 'sessions'"
+                                v-else-if="
+                                    item.name ===
+                                    'sessions'
+                                "
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -296,9 +335,12 @@ onBeforeUnmount(() => {
                                 />
                             </svg>
 
-                            <!-- Insights Icon -->
+                            <!-- Insights -->
                             <svg
-                                v-else-if="item.name === 'insights'"
+                                v-else-if="
+                                    item.name ===
+                                    'insights'
+                                "
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -324,7 +366,7 @@ onBeforeUnmount(() => {
                                 />
                             </svg>
 
-                            <!-- Settings Icon -->
+                            <!-- Settings -->
                             <svg
                                 v-else
                                 xmlns="http://www.w3.org/2000/svg"
@@ -343,7 +385,7 @@ onBeforeUnmount(() => {
                                 <path
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
-                                    d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.41 1.41-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.04 1.56V20h-2v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.41-1.41.06-.06A1.7 1.7 0 0 0 8.4 15.4a1.7 1.7 0 0 0-1.56-1.04H6v-2h.84A1.7 1.7 0 0 0 8.4 11.3a1.7 1.7 0 0 0-.34-1.88L8 9.36l1.41-1.41.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.4 6.8V6h2v.8a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.41 1.41-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 .34 1.88 1.7 1.7 0 0 0 1.56 1.04H20v2h-.6a1.7 1.7 0 0 0-1.56 1.04Z"
+                                    d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.41 1.41-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.04 1.56V20h-2v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.41-1.41.06-.06A1.7 1.7 0 0 0 8.4 15.4a1.7 1.7 0 0 0-1.56-1.04H6v-2h.84A1.7 1.7 0 0 0 8.4 11.3a1.7 1.7 0 0 0-.34-1.88L8 9.36l1.41-1.41.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.4 6.8V6h2v.8a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.41 1.41-.06.06a1.7 1.7 0 0 0 .34 1.88 1.7 1.7 0 0 0 1.56 1.04H20v2h-.6a1.7 1.7 0 0 0-1.56 1.04Z"
                                 />
                             </svg>
 
@@ -352,7 +394,7 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
 
-                <!-- Desktop Account -->
+                <!-- Desktop Account / Guest -->
                 <div
                     id="focura-account-menu"
                     class="relative hidden shrink-0 sm:block"
@@ -365,7 +407,9 @@ onBeforeUnmount(() => {
                         "
                         aria-haspopup="menu"
                         aria-label="Open account menu"
-                        @click.stop="toggleAccountMenu"
+                        @click.stop="
+                            toggleAccountMenu
+                        "
                     >
                         <span
                             class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-xs font-semibold text-blue-700 ring-1 ring-blue-100"
@@ -377,7 +421,7 @@ onBeforeUnmount(() => {
                         <span
                             class="hidden max-w-32 truncate text-sm font-medium text-slate-700 dark:text-slate-300 md:block"
                         >
-                            {{ user?.name ?? 'Account' }}
+                            {{ accountLabel }}
                         </span>
 
                         <svg
@@ -404,32 +448,48 @@ onBeforeUnmount(() => {
                         leave-to-class="scale-95 opacity-0"
                     >
                         <div
-                            v-if="isAccountMenuOpen"
+                            v-if="
+                                isAccountMenuOpen
+                            "
                             class="absolute right-0 z-50 mt-2 w-64 origin-top-right rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg ring-1 ring-black/5 dark:border-slate-700 dark:bg-slate-950"
                             role="menu"
-                            aria-label="Account menu"
+                            aria-label="User menu"
                         >
+                            <!-- User / Guest Information -->
                             <div
                                 class="border-b border-slate-100 px-3 py-2.5 dark:border-slate-800"
                             >
                                 <p
                                     class="truncate text-sm font-semibold text-slate-900 dark:text-slate-100"
                                 >
-                                    {{ user?.name }}
+                                    {{ accountLabel }}
                                 </p>
 
                                 <p
+                                    v-if="user?.email"
                                     class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400"
                                 >
-                                    {{ user?.email }}
+                                    {{ user.email }}
+                                </p>
+
+                                <p
+                                    v-else
+                                    class="mt-0.5 text-xs text-slate-500 dark:text-slate-400"
+                                >
+                                    Guest session
                                 </p>
                             </div>
 
+                            <!-- Settings -->
                             <RouterLink
-                                :to="{ name: 'settings' }"
+                                :to="{
+                                    name: 'settings',
+                                }"
                                 class="mt-1 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
                                 role="menuitem"
-                                @click="closeAccountMenu"
+                                @click="
+                                    closeAccountMenu
+                                "
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -448,14 +508,16 @@ onBeforeUnmount(() => {
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
-                                        d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.41 1.41-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.04 1.56V20h-2v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.41-1.41.06-.06A1.7 1.7 0 0 0 8.4 15.4a1.7 1.7 0 0 0-1.56-1.04H6v-2h.84A1.7 1.7 0 0 0 8.4 11.3a1.7 1.7 0 0 0-.34-1.88L8 9.36l1.41-1.41.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.4 6.8V6h2v.8a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.41 1.41-.06.06a1.7 1.7 0 0 0 1.41.34A1.7 1.7 0 0 0 20v2h-.6a1.7 1.7 0 0 0-1.56 1.04Z"
+                                        d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.41 1.41-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.04 1.56V20h-2v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.41-1.41.06-.06A1.7 1.7 0 0 0 8.4 15.4a1.7 1.7 0 0 0-1.56-1.04H6v-2h.84A1.7 1.7 0 0 0 8.4 11.3a1.7 1.7 0 0 0-.34-1.88L8 9.36l1.41-1.41.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.4 6.8V6h2v.8a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.41 1.41-.06.06a1.7 1.7 0 0 0 1.56 1.04H20v2h-.6a1.7 1.7 0 0 0-1.56 1.04Z"
                                     />
                                 </svg>
 
                                 Settings
                             </RouterLink>
 
+                            <!-- Log out: Authenticated only -->
                             <button
+                                v-if="!isGuest"
                                 type="button"
                                 class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-red-950/30"
                                 role="menuitem"
@@ -517,7 +579,9 @@ onBeforeUnmount(() => {
                 >
                     <!-- Hamburger -->
                     <svg
-                        v-if="!isMobileMenuOpen"
+                        v-if="
+                            !isMobileMenuOpen
+                        "
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill="none"
@@ -563,7 +627,7 @@ onBeforeUnmount(() => {
                 </button>
             </div>
 
-            <!-- Mobile Navigation -->
+            <!-- Mobile Menu -->
             <Transition
                 enter-active-class="transition duration-150 ease-out"
                 enter-from-class="-translate-y-2 opacity-0"
@@ -577,6 +641,7 @@ onBeforeUnmount(() => {
                     id="focura-mobile-menu"
                     class="border-t border-slate-100 bg-white px-4 pb-4 pt-3 dark:border-slate-800 dark:bg-slate-950 sm:hidden"
                 >
+                    <!-- Navigation -->
                     <div
                         class="rounded-xl border border-slate-200 bg-slate-50 p-1.5 dark:border-slate-700 dark:bg-slate-900"
                     >
@@ -585,21 +650,27 @@ onBeforeUnmount(() => {
                             :key="item.name"
                             :to="{ name: item.name }"
                             :aria-current="
-                                activeRouteName === item.name
+                                activeRouteName ===
+                                item.name
                                     ? 'page'
                                     : undefined
                             "
                             class="flex min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors"
                             :class="
-                                activeRouteName === item.name
+                                activeRouteName ===
+                                item.name
                                     ? 'bg-white text-blue-600 shadow-sm ring-1 ring-slate-200 dark:bg-slate-950 dark:ring-slate-700'
                                     : 'text-slate-600 hover:bg-white hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100'
                             "
-                            @click="handleNavigation"
+                            @click="
+                                handleNavigation
+                            "
                         >
-                            <!-- Focus Icon -->
+                            <!-- Focus -->
                             <svg
-                                v-if="item.name === 'focus'"
+                                v-if="
+                                    item.name === 'focus'
+                                "
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -620,9 +691,12 @@ onBeforeUnmount(() => {
                                 />
                             </svg>
 
-                            <!-- Sessions Icon -->
+                            <!-- Sessions -->
                             <svg
-                                v-else-if="item.name === 'sessions'"
+                                v-else-if="
+                                    item.name ===
+                                    'sessions'
+                                "
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -643,9 +717,12 @@ onBeforeUnmount(() => {
                                 />
                             </svg>
 
-                            <!-- Insights Icon -->
+                            <!-- Insights -->
                             <svg
-                                v-else-if="item.name === 'insights'"
+                                v-else-if="
+                                    item.name ===
+                                    'insights'
+                                "
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -671,7 +748,7 @@ onBeforeUnmount(() => {
                                 />
                             </svg>
 
-                            <!-- Settings Icon -->
+                            <!-- Settings -->
                             <svg
                                 v-else
                                 xmlns="http://www.w3.org/2000/svg"
@@ -690,27 +767,33 @@ onBeforeUnmount(() => {
                                 <path
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
-                                    d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.41 1.41-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.04 1.56V20h-2v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.41-1.41.06-.06A1.7 1.7 0 0 0 8.4 15.4a1.7 1.7 0 0 0-1.56-1.04H6v-2h.84A1.7 1.7 0 0 0 8.4 11.3a1.7 1.7 0 0 0-.34-1.88L8 9.36l1.41-1.41.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.4 6.8V6h2v.8a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.41 1.41-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.56 1.04H20v2h-.6a1.7 1.7 0 0 0-1.56 1.04Z"
+                                    d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.41 1.41-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.04 1.56V20h-2v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.41-1.41.06-.06A1.7 1.7 0 0 0 8.4 15.4a1.7 1.7 0 0 0-1.56-1.04H6v-2h.84A1.7 1.7 0 0 0 8.4 11.3a1.7 1.7 0 0 0-.34-1.88L8 9.36l1.41-1.41.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.4 6.8V6h2v.8a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.41 1.41-.06.06a1.7 1.7 0 0 0 1.56.34A1.7 1.7 0 0 0 20v2h-.6a1.7 1.7 0 0 0-1.56 1.04Z"
                                 />
                             </svg>
 
-                            <span class="min-w-0 flex-1">
+                            <span
+                                class="min-w-0 flex-1"
+                            >
                                 {{ item.label }}
                             </span>
 
                             <span
-                                class="text-xs text-slate-400 dark:text-slate-500"
+                                class="hidden text-xs text-slate-400 dark:text-slate-500 sm:block"
                             >
-                                {{ item.description }}
+                                {{
+                                    item.description
+                                }}
                             </span>
                         </RouterLink>
                     </div>
 
-                    <!-- Mobile Account -->
+                    <!-- Mobile Guest / User -->
                     <div
                         class="mt-3 rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900"
                     >
-                        <div class="flex items-center gap-3">
+                        <div
+                            class="flex items-center gap-3"
+                        >
                             <span
                                 class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-blue-700 ring-1 ring-blue-100"
                                 aria-hidden="true"
@@ -718,28 +801,44 @@ onBeforeUnmount(() => {
                                 {{ userInitials }}
                             </span>
 
-                            <div class="min-w-0 flex-1">
+                            <div
+                                class="min-w-0 flex-1"
+                            >
                                 <p
                                     class="truncate text-sm font-semibold text-slate-900 dark:text-slate-100"
                                 >
-                                    {{ user?.name ?? 'Account' }}
+                                    {{ accountLabel }}
                                 </p>
 
                                 <p
+                                    v-if="user?.email"
                                     class="truncate text-xs text-slate-500 dark:text-slate-400"
                                 >
-                                    {{ user?.email }}
+                                    {{ user.email }}
+                                </p>
+
+                                <p
+                                    v-else
+                                    class="text-xs text-slate-500 dark:text-slate-400"
+                                >
+                                    Guest session
                                 </p>
                             </div>
                         </div>
 
+                        <!-- Guest: Settings only -->
                         <div
-                            class="mt-3 grid grid-cols-2 gap-2"
+                            v-if="isGuest"
+                            class="mt-3"
                         >
                             <RouterLink
-                                :to="{ name: 'settings' }"
-                                class="flex min-h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
-                                @click="handleNavigation"
+                                :to="{
+                                    name: 'settings',
+                                }"
+                                class="flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                                @click="
+                                    handleNavigation
+                                "
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -758,7 +857,46 @@ onBeforeUnmount(() => {
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
-                                        d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.41 1.41-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.04 1.56V20h-2v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.41-1.41.06-.06A1.7 1.7 0 0 0 8.4 15.4a1.7 1.7 0 0 0-1.56-1.04H6v-2h.84A1.7 1.7 0 0 0 8.4 11.3a1.7 1.7 0 0 0-.34-1.88L8 9.36l1.41-1.41.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.4 6.8V6h2v.8a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.88-.34l-.06-.06 1.41 1.41-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 .34 1.88 1.7 1.7 0 0 0 1.56 1.04H20v2h-.6a1.7 1.7 0 0 0-1.56 1.04Z"
+                                        d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.41 1.41-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.04 1.56V20h-2v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.41-1.41.06-.06A1.7 1.7 0 0 0 8.4 15.4a1.7 1.7 0 0 0-1.56-1.04H6v-2h.84A1.7 1.7 0 0 0 8.4 11.3a1.7 1.7 0 0 0-.34-1.88L8 9.36l1.41-1.41.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.4 6.8V6h2v.8a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.41 1.41-.06.06a1.7 1.7 0 0 0 1.56.34 1.7 1.7 0 0 0 1.56 1.04H20v2h-.6a1.7 1.7 0 0 0-1.56 1.04Z"
+                                    />
+                                </svg>
+
+                                Settings
+                            </RouterLink>
+                        </div>
+
+                        <!-- Authenticated: Settings + Log out -->
+                        <div
+                            v-else
+                            class="mt-3 grid grid-cols-2 gap-2"
+                        >
+                            <RouterLink
+                                :to="{
+                                    name: 'settings',
+                                }"
+                                class="flex min-h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                                @click="
+                                    handleNavigation
+                                "
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    class="h-4 w-4"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"
+                                    />
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.41 1.41-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.04 1.56V20h-2v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.41-1.41.06-.06A1.7 1.7 0 0 0 8.4 15.4a1.7 1.7 0 0 0-1.56-1.04H6v-2h.84A1.7 1.7 0 0 0 8.4 11.3a1.7 1.7 0 0 0-.34-1.88L8 9.36l1.41-1.41.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.4 6.8V6h2v.8a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.41 1.41-.06.06a1.7 1.7 0 0 0 1.56 1.04H20v2h-.6a1.7 1.7 0 0 0-1.56 1.04Z"
                                     />
                                 </svg>
 
