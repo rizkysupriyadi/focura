@@ -250,7 +250,7 @@ onBeforeUnmount(() => {
                         <span
                             class="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-600"
                         />
-                        Focus with intention.
+                        Focus with intention
                     </div>
 
                     <h1
