@@ -1,0 +1,20 @@
+{
+    "name": "Focura — Focus with intention.",
+    "short_name": "Focura",
+    "description": "A minimal focus workspace for students and professionals.",
+    "lang": "en",
+    "start_url": "/focus",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2563eb",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}
