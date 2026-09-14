@@ -46,12 +46,33 @@ const hasRecoveredTimer = ref(false);
 const isLifecycleActionPending = ref(false);
 const isCompletionNotificationShown = ref(false);
 
+/*
+|--------------------------------------------------------------------------
+| LOCAL-FIRST LIFECYCLE SYNC
+|--------------------------------------------------------------------------
+|
+| Timer state is authoritative for the UI.
+| Backend lifecycle requests are synchronized sequentially in the
+| background so an older request cannot overtake a newer action.
+|
+*/
+
+let lifecycleSyncQueue: Promise<void> = Promise.resolve();
+
+function queueLifecycleSync(
+    task: () => Promise<void>,
+): void {
+    lifecycleSyncQueue =
+        lifecycleSyncQueue
+            .then(task)
+            .catch((caught) => {
+                focusSession.error.value =
+                    getApiErrorMessage(caught);
+            });
+}
+
 const isActionPending = computed(() => {
-    return (
-        isLifecycleActionPending.value ||
-        focusSession.isCreating.value ||
-        focusSession.isCompleting.value
-    );
+    return focusSession.isCompleting.value;
 });
 
 const presets = computed(() => [
@@ -444,30 +465,23 @@ async function startTimer(): Promise<void> {
     if (
         currentStatus.value === 'running' ||
         currentStatus.value === 'paused' ||
-        focusSession.isCreating.value ||
-        isLifecycleActionPending.value
+        focusSession.isCreating.value
     ) {
         return;
     }
 
     interruption.reset();
-
     showInterruptionWarning.value = false;
     lastInterruption.value = null;
     isCompletionNotificationShown.value = false;
     focusSession.reset();
 
     /*
-     * Request notification permission while the action
-     * is still directly associated with the user's click.
-     *
-     * Permission failure must never prevent the timer
-     * from starting.
+     * Notification permission must never block the timer.
      */
-    await requestCompletionNotificationPermission();
+    void requestCompletionNotificationPermission();
 
     const startedAt = new Date();
-
     const durationSeconds =
         selectedDurationSeconds.value;
 
@@ -483,40 +497,39 @@ async function startTimer(): Promise<void> {
             startedAt.toISOString(),
     };
 
-/*
- * Optimistic UI:
- * timer langsung running tanpa menunggu API.
- */
-timer.start(
-    durationSeconds,
-);
+    /*
+     * Start the local timer immediately.
+     */
+    timer.start(durationSeconds);
+    interruption.syncTracking();
+    hasRecoveredTimer.value = false;
+    updateDocumentTitle();
 
-interruption.syncTracking();
-
-isLifecycleActionPending.value = true;
-
-    try {
+    /*
+     * Create the backend session in the background.
+     */
+    queueLifecycleSync(async () => {
         const created =
-            await focusSession.start(
-                payload,
-            );
+            await focusSession.start(payload);
 
         if (!created) {
             /*
-             * Server gagal membuat session.
-             * Kembalikan timer ke idle.
+             * Do not overwrite a newer user action.
              */
-            timer.reset();
-            interruption.reset();
+            if (
+                currentStatus.value === 'running' &&
+                !focusSession.session.value
+            ) {
+                timer.reset();
+                interruption.reset();
+                updateDocumentTitle();
+            }
 
             return;
         }
 
         hasRecoveredTimer.value = false;
-    } finally {
-        isLifecycleActionPending.value = false;
-        updateDocumentTitle();
-    }
+    });
 }
 
 /*
@@ -530,54 +543,35 @@ isLifecycleActionPending.value = true;
 */
 
 async function pauseTimer(): Promise<void> {
-    if (
-        currentStatus.value !== 'running' ||
-        !focusSession.session.value ||
-        isLifecycleActionPending.value
-    ) {
+    if (currentStatus.value !== 'running') {
         return;
     }
 
-    const previousTimerState =
-        captureStorage(
-            TIMER_STORAGE_KEY,
-        );
-
-    const pausedAt =
-        new Date().toISOString();
+    const pausedAt = new Date().toISOString();
 
     /*
-     * Optimistic UI.
+     * Pause locally immediately.
      */
     timer.pause();
-
     interruption.syncTracking();
+    updateDocumentTitle();
 
-    isLifecycleActionPending.value = true;
+    /*
+     * Synchronize with the backend in the background.
+     */
+    queueLifecycleSync(async () => {
+        while (focusSession.isCreating.value) {
+            await new Promise<void>((resolve) => {
+                window.setTimeout(resolve, 25);
+            });
+        }
 
-    try {
-        const paused =
-            await focusSession.pause(
-                pausedAt,
-            );
-
-        if (paused) {
+        if (!focusSession.session.value) {
             return;
         }
 
-        /*
-         * API gagal.
-         * Restore timer ke state sebelum pause.
-         */
-        restoreTimerFromStorage(
-            previousTimerState,
-        );
-
-        interruption.syncTracking();
-    } finally {
-        isLifecycleActionPending.value = false;
-        updateDocumentTitle();
-    }
+        await focusSession.pause(pausedAt);
+    });
 }
 
 /*
@@ -591,54 +585,35 @@ async function pauseTimer(): Promise<void> {
 */
 
 async function resumeTimer(): Promise<void> {
-    if (
-        currentStatus.value !== 'paused' ||
-        !focusSession.session.value ||
-        isLifecycleActionPending.value
-    ) {
+    if (currentStatus.value !== 'paused') {
         return;
     }
 
-    const previousTimerState =
-        captureStorage(
-            TIMER_STORAGE_KEY,
-        );
-
-    const resumedAt =
-        new Date().toISOString();
+    const resumedAt = new Date().toISOString();
 
     /*
-     * Optimistic UI.
+     * Resume locally immediately.
      */
     timer.resume();
-
     interruption.syncTracking();
+    updateDocumentTitle();
 
-    isLifecycleActionPending.value = true;
+    /*
+     * Synchronize with the backend in the background.
+     */
+    queueLifecycleSync(async () => {
+        while (focusSession.isCreating.value) {
+            await new Promise<void>((resolve) => {
+                window.setTimeout(resolve, 25);
+            });
+        }
 
-    try {
-        const resumed =
-            await focusSession.resume(
-                resumedAt,
-            );
-
-        if (resumed) {
+        if (!focusSession.session.value) {
             return;
         }
 
-        /*
-         * API gagal.
-         * Kembalikan timer ke paused state sebelumnya.
-         */
-        restoreTimerFromStorage(
-            previousTimerState,
-        );
-
-        interruption.syncTracking();
-    } finally {
-        isLifecycleActionPending.value = false;
-        updateDocumentTitle();
-    }
+        await focusSession.resume(resumedAt);
+    });
 }
 
 /*
@@ -658,80 +633,23 @@ async function resumeTimer(): Promise<void> {
 */
 
 async function resetTimer(): Promise<void> {
-    if (
-        isLifecycleActionPending.value ||
-        focusSession.isCompleting.value
-    ) {
+    if (focusSession.isCompleting.value) {
         return;
     }
 
     const previousSession =
         focusSession.session.value;
 
-    /*
-     * Tidak ada backend session.
-     * Reset lokal saja.
-     */
-    if (!previousSession) {
-        timer.reset();
-        interruption.reset();
-
-        hasRecoveredTimer.value = false;
-        showInterruptionWarning.value = false;
-        lastInterruption.value = null;
-
-        updateDocumentTitle();
-
-        return;
-    }
-
-    /*
-     * Session completed sudah final.
-     * Jangan kirim CANCEL ke backend.
-     */
-    if (
-        previousSession.status ===
-        'completed'
-    ) {
-        timer.reset();
-        interruption.reset();
-
-        focusSession.reset();
-
-        hasRecoveredTimer.value = false;
-        showInterruptionWarning.value = false;
-        lastInterruption.value = null;
-
-        updateDocumentTitle();
-
-        return;
-    }
-
-    const previousTimerState =
-        captureStorage(
-            TIMER_STORAGE_KEY,
-        );
-
-    const previousSessionState =
-        captureStorage(
-            SESSION_STORAGE_KEY,
-        );
-
     const sessionId =
-        previousSession.id;
-
-    const cancelledAt =
-        new Date().toISOString();
+        previousSession?.id ?? null;
 
     /*
-     * Optimistic local reset.
+     * Reset the local timer immediately.
      */
     timer.reset();
     interruption.reset();
 
-    focusSession.session.value =
-        null;
-
+    focusSession.session.value = null;
     focusSession.error.value = null;
 
     hasRecoveredTimer.value = false;
@@ -740,47 +658,36 @@ async function resetTimer(): Promise<void> {
 
     updateDocumentTitle();
 
-    isLifecycleActionPending.value = true;
+    if (!sessionId) {
+        return;
+    }
 
-    try {
-await cancelFocusSession(
-    sessionId,
-    {
-        cancelled_at: new Date().toISOString(),
-    },
-);
+    /*
+     * Cancel the backend session in the background.
+     *
+     * This is queued behind any previous pause/resume request.
+     */
+    queueLifecycleSync(async () => {
+        while (focusSession.isCreating.value) {
+            await new Promise<void>((resolve) => {
+                window.setTimeout(resolve, 25);
+            });
+        }
 
-        /*
-         * Backend berhasil.
-         * Local state sudah benar.
-         */
-        if (
-            typeof window !== 'undefined'
-        ) {
+        await cancelFocusSession(
+            sessionId,
+            {
+                cancelled_at:
+                    new Date().toISOString(),
+            },
+        );
+
+        if (typeof window !== 'undefined') {
             localStorage.removeItem(
                 SESSION_STORAGE_KEY,
             );
         }
-    } catch (caught) {
-        /*
-         * Backend gagal.
-         * Rollback session + timer.
-         */
-        focusSession.error.value =
-            getApiErrorMessage(caught);
-
-        restoreTimerFromStorage(
-            previousTimerState,
-        );
-
-        restoreSessionState(
-            previousSession,
-            previousSessionState,
-        );
-    } finally {
-        isLifecycleActionPending.value = false;
-        updateDocumentTitle();
-    }
+    });
 }
 
 /*
@@ -1312,6 +1219,17 @@ watch(
 );
 
 /*
+ * Keep the browser tab title synchronized with the
+ * visible timer value while the timer is running.
+ */
+watch(
+    () => timer.formattedTime.value,
+    () => {
+        updateDocumentTitle();
+    },
+);
+
+/*
 |--------------------------------------------------------------------------
 | MOUNT / RECOVERY
 |--------------------------------------------------------------------------
@@ -1778,9 +1696,6 @@ onUnmounted(() => {
                                 "
                                 type="button"
                                 class="rounded-2xl bg-blue-600 px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
-                                :disabled="
-                                    isActionPending
-                                "
                                 @click="startTimer"
                             >
                                 Start
@@ -1798,9 +1713,6 @@ onUnmounted(() => {
                                 "
                                 type="button"
                                 class="rounded-2xl bg-slate-900 px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
-                                :disabled="
-                                    isActionPending
-                                "
                                 @click="pauseTimer"
                             >
                                 Pause
@@ -1813,9 +1725,6 @@ onUnmounted(() => {
                                 "
                                 type="button"
                                 class="rounded-2xl bg-blue-600 px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
-                                :disabled="
-                                    isActionPending
-                                "
                                 @click="resumeTimer"
                             >
                                 Resume
@@ -1832,9 +1741,6 @@ onUnmounted(() => {
                                 "
                                 type="button"
                                 class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 py-3 text-sm font-medium text-slate-700 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
-                                :disabled="
-                                    isActionPending
-                                "
                                 @click="resetTimer"
                             >
                                 Reset
