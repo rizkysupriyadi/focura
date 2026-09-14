@@ -1,10 +1,10 @@
-const CACHE_NAME = 'focura-shell-v1';
+const CACHE_NAME = 'focura-shell-v2';
 
 const APP_SHELL = [
     '/',
     '/focus',
     '/manifest.webmanifest',
-    '/favicon.svg',
+    '/focura-icon.svg',
 ];
 
 self.addEventListener('install', (event) => {
@@ -50,7 +50,7 @@ self.addEventListener('fetch', (event) => {
 
     if (
         url.pathname.startsWith('/build/') ||
-        url.pathname === '/favicon.svg' ||
+        url.pathname === '/focura-icon.svg' ||
         url.pathname === '/manifest.webmanifest'
     ) {
         event.respondWith(

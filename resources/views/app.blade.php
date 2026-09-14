@@ -49,7 +49,7 @@
 
         <link
             rel="icon"
-            href="/favicon.svg"
+            href="/focura-icon.svg"
             type="image/svg+xml"
         >
 

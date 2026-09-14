@@ -59,7 +59,7 @@ export function showNotification(
     try {
         new Notification(options.title, {
             body: options.body,
-            icon: '/favicon.svg',
+            icon: '/focura-icon.svg',
             tag: options.tag,
         });
 
