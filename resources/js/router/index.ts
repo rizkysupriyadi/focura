@@ -8,10 +8,12 @@ import {
 } from '@/composables/useAuth';
 
 import Focus from '@/pages/Focus.vue';
+import ForgotPassword from '@/pages/ForgotPassword.vue';
 import Insights from '@/pages/Insights.vue';
 import Landing from '@/pages/Landing.vue';
 import Login from '@/pages/Login.vue';
 import Register from '@/pages/Register.vue';
+import ResetPassword from '@/pages/ResetPassword.vue';
 import SessionDetail from '@/pages/SessionDetail.vue';
 import Sessions from '@/pages/Sessions.vue';
 import Settings from '@/pages/Settings.vue';
@@ -33,6 +35,21 @@ const router = createRouter({
                 guestOnly: true,
             },
         },
+
+        {
+            path: '/forgot-password',
+            name: 'forgot-password',
+            component: ForgotPassword,
+            meta: {
+                guestOnly: true,
+            },
+        },
+        {
+            path: '/reset-password',
+            name: 'reset-password',
+            component: ResetPassword,
+        },
+
         {
             path: '/register',
             name: 'register',

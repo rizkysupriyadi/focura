@@ -22,6 +22,9 @@ const {
 const email = ref('');
 const password = ref('');
 const remember = ref(false);
+const resetSuccess = computed(
+    () => route.query.reset === 'success',
+);
 
 const showPassword = ref(false);
 
@@ -142,6 +145,14 @@ async function submit(): Promise<void> {
                     >
                         Continue your focus history and insights.
                     </p>
+                </div>
+
+                <div
+                    v-if="resetSuccess"
+                    class="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm leading-6 text-green-700"
+                    role="status"
+                >
+                    Your password has been reset successfully. You can now log in.
                 </div>
 
                 <form
@@ -294,6 +305,15 @@ async function submit(): Promise<void> {
                             {{ passwordError }}
                         </p>
                     </div>
+
+                    <div class="flex justify-end">
+    <RouterLink
+        :to="{ name: 'forgot-password' }"
+        class="text-sm font-medium text-blue-600 transition hover:text-blue-700"
+    >
+        Forgot password?
+    </RouterLink>
+</div>
 
                     <label
                         class="flex cursor-pointer items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400"
