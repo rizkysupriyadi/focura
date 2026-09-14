@@ -20,6 +20,8 @@ const sessions = ref<FocusSession[]>([]);
 const currentPage = ref(1);
 const lastPage = ref(1);
 const total = ref(0);
+const showingFrom = ref(0);
+const showingTo = ref(0);
 
 const perPage = 20;
 
@@ -35,19 +37,12 @@ const selectedRange =
 const isLoading = ref(false);
 const errorMessage = ref('');
 
-const showingFrom = computed(() => {
-    return total.value === 0
-        ? 0
-        : (currentPage.value - 1) * perPage + 1;
-});
+const showingLabel = computed(() => {
+    if (total.value === 0) {
+        return 'Showing 0–0 of 0 sessions';
+    }
 
-const showingTo = computed(() => {
-    return total.value === 0
-        ? 0
-        : Math.min(
-            currentPage.value * perPage,
-            total.value,
-        );
+    return `Showing ${showingFrom.value}–${showingTo.value} of ${total.value} sessions`;
 });
 
 function formatDuration(
@@ -182,7 +177,7 @@ function getStatusClasses(
                 'bg-red-50',
                 'text-red-700',
                 'ring-red-600/10',
-                'dark:bg-red-500/10',
+                'dark:bg-red-950/30',
                 'dark:text-red-300',
             ].join(' ');
 
@@ -218,12 +213,21 @@ async function loadSessions(): Promise<void> {
             });
 
         sessions.value = response.data;
+
         currentPage.value =
-            response.current_page;
+            response.meta.current_page;
+
         lastPage.value =
-            response.last_page;
+            response.meta.last_page;
+
         total.value =
-            response.total;
+            response.meta.total;
+
+        showingFrom.value =
+            response.meta.from ?? 0;
+
+        showingTo.value =
+            response.meta.to ?? 0;
     } catch (error) {
         errorMessage.value =
             error instanceof Error
@@ -293,7 +297,6 @@ onMounted(() => {
 </script>
 
 <template>
-    <AppShell>
         <main
             class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8"
         >
@@ -434,11 +437,7 @@ onMounted(() => {
                         <p
                             class="mt-1 text-sm text-slate-500 dark:text-slate-400"
                         >
-                            Showing
-                            {{ showingFrom }}–{{ showingTo }}
-                            of
-                            {{ total }}
-                            sessions
+                            {{ showingLabel }}
                         </p>
                     </div>
 
@@ -653,5 +652,4 @@ onMounted(() => {
                 </div>
             </section>
         </main>
-    </AppShell>
 </template>
