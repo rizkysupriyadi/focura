@@ -21,6 +21,10 @@ const ranges: Array<{
     label: string;
 }> = [
     {
+        value: 'today',
+        label: 'Today',
+    },
+    {
         value: '7d',
         label: '7 days',
     },
@@ -150,7 +154,10 @@ const normalizedTrend = computed<
         return [];
     }
 
-    if (selectedRange.value === 'all') {
+    if (
+        selectedRange.value === 'all' ||
+        selectedRange.value === 'today'
+    ) {
         return points;
     }
 

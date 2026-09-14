@@ -454,6 +454,11 @@ class InsightsService
         string $column = 'started_at',
     ): void {
         match ($range) {
+            'today' => $query->where(
+                $column,
+                '>=',
+                now()->startOfDay(),
+            ),
             '7d' => $query->where(
                 $column,
                 '>=',

@@ -183,6 +183,7 @@ export async function createFocusSession(
 export interface ListFocusSessionsParams {
     mode?: FocusSessionMode;
     status?: FocusSessionStatus;
+    range?: 'today';
     per_page?: number;
     page?: number;
 }
@@ -203,6 +204,13 @@ export async function listFocusSessions(
         searchParams.set(
             'status',
             params.status,
+        );
+    }
+
+    if (params.range !== undefined) {
+        searchParams.set(
+            'range',
+            params.range,
         );
     }
 

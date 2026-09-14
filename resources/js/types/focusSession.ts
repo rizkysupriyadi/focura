@@ -7,6 +7,7 @@ export type FocusSessionStatus =
     | 'cancelled';
 
 export type FocusInsightsRange =
+    | 'today'
     | '7d'
     | '30d'
     | '90d'

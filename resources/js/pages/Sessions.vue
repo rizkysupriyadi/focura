@@ -19,6 +19,7 @@ const total = ref(0);
 
 const selectedMode = ref<FocusSessionMode | ''>('');
 const selectedStatus = ref<FocusSessionStatus | ''>('completed');
+const selectedRange = ref<'today' | ''>('');
 
 const isLoading = ref(false);
 const errorMessage = ref<string | null>(null);
@@ -151,6 +152,10 @@ async function loadSessions(
                     selectedStatus.value === ''
                         ? undefined
                         : selectedStatus.value,
+                range:
+                    selectedRange.value === ''
+                        ? undefined
+                        : selectedRange.value,
                 page,
                 per_page: 10,
             },
@@ -204,7 +209,11 @@ function retry(): void {
 }
 
 watch(
-    [selectedMode, selectedStatus],
+    [
+        selectedMode,
+        selectedStatus,
+        selectedRange,
+    ],
     () => {
         void loadSessions(1);
     },
@@ -278,6 +287,27 @@ onMounted(() => {
                             <label class="sr-only" for="mode-filter">
                                 Filter by mode
                             </label>
+
+                            <label
+                                class="sr-only"
+                                for="range-filter"
+                            >
+                                Filter by date
+                            </label>
+
+                            <select
+                                id="range-filter"
+                                v-model="selectedRange"
+                                class="rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:ring-blue-950"
+                            >
+                                <option value="">
+                                    All time
+                                </option>
+
+                                <option value="today">
+                                    Today
+                                </option>
+                            </select>
 
                             <select
                                 id="mode-filter"

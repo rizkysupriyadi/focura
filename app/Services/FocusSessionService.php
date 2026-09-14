@@ -107,6 +107,7 @@ class FocusSessionService
         string $visitorId,
         ?string $mode = null,
         ?string $status = null,
+        ?string $range = null,
         int $perPage = 10,
     ): LengthAwarePaginator {
         return FocusSession::query()
@@ -118,6 +119,14 @@ class FocusSessionService
             ->when(
                 $status !== null,
                 fn ($query) => $query->where('status', $status),
+            )
+            ->when(
+                $range === 'today',
+                fn ($query) => $query->where(
+                    'started_at',
+                    '>=',
+                    now()->startOfDay(),
+                ),
             )
             ->with(['interruptions'])
             ->latest('started_at')
@@ -133,6 +142,7 @@ class FocusSessionService
         int $userId,
         ?string $mode = null,
         ?string $status = null,
+        ?string $range = null,
         int $perPage = 10,
     ): LengthAwarePaginator {
         return FocusSession::query()
@@ -144,6 +154,14 @@ class FocusSessionService
             ->when(
                 $status !== null,
                 fn ($query) => $query->where('status', $status),
+            )
+            ->when(
+                $range === 'today',
+                fn ($query) => $query->where(
+                    'started_at',
+                    '>=',
+                    now()->startOfDay(),
+                ),
             )
             ->with(['interruptions'])
             ->latest('started_at')

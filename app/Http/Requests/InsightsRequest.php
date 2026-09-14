@@ -22,6 +22,7 @@ class InsightsRequest extends FormRequest
                 'nullable',
                 'string',
                 Rule::in([
+                    'today',
                     '7d',
                     '30d',
                     '90d',
@@ -37,7 +38,7 @@ class InsightsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'range.in' => 'The insights range must be 7d, 30d, 90d, or all.',
+            'range.in' => 'The insights range must be today, 7d, 30d, 90d, or all.',
         ];
     }
 }

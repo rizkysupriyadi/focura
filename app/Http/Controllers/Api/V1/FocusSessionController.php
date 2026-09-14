@@ -46,6 +46,7 @@ class FocusSessionController extends Controller
                 userId: $identity['user_id'],
                 mode: $request->validated('mode'),
                 status: $request->validated('status'),
+                range: $request->validated('range'),
                 perPage: $perPage,
             );
         } else {
@@ -53,6 +54,7 @@ class FocusSessionController extends Controller
                 visitorId: $identity['visitor_id'],
                 mode: $request->validated('mode'),
                 status: $request->validated('status'),
+                range: $request->validated('range'),
                 perPage: $perPage,
             );
         }

@@ -20,6 +20,14 @@ class ListFocusSessionsRequest extends FormRequest
                 'uuid',
             ],
 
+            'range' => [
+                'nullable',
+                'string',
+                Rule::in([
+                    'today',
+                ]),
+            ],
+
             'mode' => [
                 'nullable',
                 'string',
