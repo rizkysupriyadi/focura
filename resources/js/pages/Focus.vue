@@ -19,8 +19,6 @@ import {
     FocusSessionApiError,
 } from '@/services/focusSessions';
 import {
-    getNotificationPermission,
-    requestNotificationPermission,
     showNotification,
 } from '@/services/notifications';
 
@@ -421,35 +419,6 @@ function applyCustomDuration(): void {
     );
 }
 
-async function requestCompletionNotificationPermission(): Promise<void> {
-    if (
-        !settings.settings.value
-            .completionNotificationEnabled
-    ) {
-        return;
-    }
-
-    const permission =
-        getNotificationPermission();
-
-    if (
-        permission === 'unsupported' ||
-        permission === 'denied' ||
-        permission === 'granted'
-    ) {
-        return;
-    }
-
-    try {
-        await requestNotificationPermission();
-    } catch {
-        /*
-         * Permission failure must never prevent
-         * the timer from starting.
-         */
-    }
-}
-
 
 /*
 |--------------------------------------------------------------------------
@@ -479,8 +448,6 @@ async function startTimer(): Promise<void> {
     /*
      * Notification permission must never block the timer.
      */
-    void requestCompletionNotificationPermission();
-
     const startedAt = new Date();
     const durationSeconds =
         selectedDurationSeconds.value;
