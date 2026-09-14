@@ -600,10 +600,6 @@ async function resumeTimer(): Promise<void> {
 */
 
 async function resetTimer(): Promise<void> {
-    if (focusSession.isCompleting.value) {
-        return;
-    }
-
     const previousSession =
         focusSession.session.value;
 
@@ -1062,10 +1058,8 @@ async function completeSession(): Promise<void> {
     }
 
     /*
-     * 8E:
      * Interruption finalization and synchronization are
-     * explicitly completed before the backend completion
-     * request is allowed to start.
+     * completed before the backend completion request.
      */
     await finalizeInterruptionBeforeCompletion();
 
@@ -1084,31 +1078,13 @@ async function completeSession(): Promise<void> {
         return;
     }
 
-    const completed =
-        await focusSession.complete(
-            new Date().toISOString(),
-        );
-
     /*
-     * Backend remains the source of truth.
+     * Persist completion after the local completion
+     * feedback has already been emitted.
      */
-    if (!completed) {
-        return;
-    }
-
-    /*
-     * Notification and sound are emitted exactly once
-     * for the current frontend lifecycle.
-     */
-    if (
-        isCompletionNotificationShown.value
-    ) {
-        return;
-    }
-
-    isCompletionNotificationShown.value = true;
-
-    notifySessionCompleted();
+    await focusSession.complete(
+        new Date().toISOString(),
+    );
 }
 
 /*
@@ -1130,9 +1106,20 @@ watch(
             return;
         }
 
-        await completeSession();
+        if (
+            !isCompletionNotificationShown.value
+        ) {
+            isCompletionNotificationShown.value = true;
+
+            notifySessionCompleted();
+        }
+
+        void completeSession();
 
         updateDocumentTitle();
+    },
+    {
+        flush: 'sync',
     },
 );
 
