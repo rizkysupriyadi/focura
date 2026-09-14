@@ -3,9 +3,12 @@ import { getCsrfHeaders } from '@/lib/csrf';
 import type {
     AuthResponse,
     AuthUser,
+    ForgotPasswordPayload,
     LoginPayload,
     LogoutResponse,
+    PasswordMessageResponse,
     RegisterPayload,
+    ResetPasswordPayload,
 } from '@/types/auth';
 
 const API_BASE_URL = '/api/v1';
@@ -163,6 +166,30 @@ export async function register(
         );
 
     return response.data;
+}
+
+export async function forgotPassword(
+    payload: ForgotPasswordPayload,
+): Promise<PasswordMessageResponse> {
+    return request<PasswordMessageResponse>(
+        '/auth/forgot-password',
+        {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        },
+    );
+}
+
+export async function resetPassword(
+    payload: ResetPasswordPayload,
+): Promise<PasswordMessageResponse> {
+    return request<PasswordMessageResponse>(
+        '/auth/reset-password',
+        {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        },
+    );
 }
 
 export async function logout(): Promise<void> {

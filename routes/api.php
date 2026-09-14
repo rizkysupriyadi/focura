@@ -10,10 +10,6 @@ Route::prefix('v1')->group(function () {
     |--------------------------------------------------------------------------
     | Authentication
     |--------------------------------------------------------------------------
-    |
-    | These routes use Laravel's web session guard so the Vue SPA can
-    | authenticate using the same-origin Laravel session cookie.
-    |
     */
 
     Route::middleware([
@@ -29,6 +25,22 @@ Route::prefix('v1')->group(function () {
         Route::post('/auth/login', [
             AuthController::class,
             'login',
+        ]);
+
+    });
+
+    Route::middleware([
+        'web',
+        'throttle:5,1',
+    ])->group(function () {
+        Route::post('/auth/forgot-password', [
+            AuthController::class,
+            'forgotPassword',
+        ]);
+
+        Route::post('/auth/reset-password', [
+            AuthController::class,
+            'resetPassword',
         ]);
     });
 

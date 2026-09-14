@@ -23,6 +23,10 @@ export interface ClaimGuestSessionsResponse {
     message?: string;
 }
 
+export interface PasswordMessageResponse {
+    message: string;
+}
+
 export interface LoginPayload {
     email: string;
     password: string;
@@ -31,6 +35,17 @@ export interface LoginPayload {
 
 export interface RegisterPayload {
     name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+}
+
+export interface ForgotPasswordPayload {
+    email: string;
+}
+
+export interface ResetPasswordPayload {
+    token: string;
     email: string;
     password: string;
     password_confirmation: string;

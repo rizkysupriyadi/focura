@@ -59,6 +59,7 @@ export function showNotification(
     try {
         new Notification(options.title, {
             body: options.body,
+            icon: '/favicon.svg',
             tag: options.tag,
         });
 
