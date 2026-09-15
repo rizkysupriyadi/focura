@@ -213,17 +213,10 @@ onBeforeUnmount(() => {
                 <div class="flex items-center gap-2">
                     <RouterLink
                         to="/login"
-                        class="block rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
-                    >
+                        class="rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md">
                         Log in
                     </RouterLink>
 
-                    <RouterLink
-                        to="/focus"
-                        class="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
-                    >
-                        Start focusing
-                    </RouterLink>
                 </div>
             </div>
         </header>
