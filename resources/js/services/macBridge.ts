@@ -29,6 +29,11 @@ let scheduledSendId: number | null = null;
 function send(
     state: MacBridgeState,
 ): void {
+    console.log(
+        '[Focura MacBridge] sending',
+        state,
+    );
+
     void fetch(BRIDGE_URL, {
         method: 'POST',
         headers: {
@@ -36,14 +41,21 @@ function send(
         },
         body: JSON.stringify(state),
         credentials: 'omit',
-    }).catch(() => {
-        /*
-         * The native companion may not be running.
-         *
-         * Bridge failures must never affect the
-         * web timer or focus-session lifecycle.
-         */
-    });
+    })
+        .then((response) => {
+            console.log(
+                '[Focura MacBridge] response',
+                response.status,
+                state.remaining,
+            );
+        })
+        .catch((error: unknown) => {
+            console.error(
+                '[Focura MacBridge] failed',
+                error,
+                state,
+            );
+        });
 }
 
 function flush(): void {

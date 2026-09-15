@@ -26,3 +26,10 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# macOS
+.DS_Store
+
+# Xcode user-specific data
+**/xcuserdata/
+**/*.xcuserstate
