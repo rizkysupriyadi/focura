@@ -213,7 +213,7 @@ onBeforeUnmount(() => {
                 <div class="flex items-center gap-2">
                     <RouterLink
                         to="/login"
-                        class="hidden rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 sm:block"
+                        class="block rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
                     >
                         Log in
                     </RouterLink>
