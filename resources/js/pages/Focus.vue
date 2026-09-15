@@ -7,6 +7,11 @@ import {
     watch,
 } from 'vue';
 
+import {
+    publishTimerSnapshot,
+} from '@/services/macBridge';
+
+
 import { useFocusSession } from '@/composables/useFocusSession';
 import { useSettings } from '@/composables/useSettings';
 import { useInterruption } from '@/composables/useInterruption';
@@ -32,6 +37,23 @@ const focusSession = useFocusSession();
 const settings = useSettings();
 const audio = useAudio();
 const focusMusic = useFocusMusic();
+
+function publishMacState(): void {
+    const sessionId =
+        focusSession.session.value?.id ?? null;
+
+    const title =
+        mode.value === 'focus'
+            ? task.value.trim() || null
+            : null;
+
+    publishTimerSnapshot(
+        timer.snapshot(),
+        mode.value,
+        sessionId,
+        title,
+    );
+}
 
 const mode = ref<TimerMode>('focus');
 const task = ref('');
@@ -1180,6 +1202,25 @@ watch(
     () => timer.formattedTime.value,
     () => {
         updateDocumentTitle();
+    },
+);
+
+watch(
+    [
+        () => timer.status.value,
+        () => timer.remainingSeconds.value,
+        () => timer.durationSeconds.value,
+        () => timer.startedAt.value,
+        () => timer.pausedAt.value,
+        () => mode.value,
+        () => task.value,
+        () => focusSession.session.value?.id ?? null,
+    ],
+    () => {
+        publishMacState();
+    },
+    {
+        immediate: true,
     },
 );
 
