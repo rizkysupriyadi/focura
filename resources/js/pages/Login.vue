@@ -306,14 +306,6 @@ async function submit(): Promise<void> {
                         </p>
                     </div>
 
-                    <div class="flex justify-end">
-    <RouterLink
-        :to="{ name: 'forgot-password' }"
-        class="text-sm font-medium text-blue-600 transition hover:text-blue-700"
-    >
-        Forgot password?
-    </RouterLink>
-</div>
 
                     <label
                         class="flex cursor-pointer items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400"
