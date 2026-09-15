@@ -1,4 +1,7 @@
 <script setup lang="ts">
+
+import { useAuth } from '@/composables/useAuth';
+
 import {
     computed,
     onMounted,
@@ -9,6 +12,17 @@ import {
     FocusSessionApiError,
     getFocusInsights,
 } from '@/services/focusSessions';
+
+import {
+    downloadInsightPng,
+    generateInsightSharePng,
+    shareInsightPng,
+} from '@/services/insightShare';
+
+import type {
+    InsightShareBackground,
+    InsightShareFormat,
+} from '@/services/insightShare';
 
 import type {
     FocusInsights,
@@ -50,6 +64,254 @@ const isChangingRange = ref(false);
 const error = ref<string | null>(null);
 
 let requestSequence = 0;
+
+const { user } = useAuth();
+
+const accountName = computed(
+    () => user.value?.name?.trim() || 'Focura',
+);
+
+const isShareOpen = ref(false);
+const shareFormats: Array<{
+    value: InsightShareFormat;
+    label: string;
+}> = [
+    {
+        value: 'classic',
+        label: 'Classic',
+    },
+    {
+        value: 'minimal',
+        label: 'Minimal',
+    },
+    {
+        value: 'metrics',
+        label: 'Metrics',
+    },
+    {
+        value: 'profile',
+        label: 'Profile',
+    },
+];
+
+const shareFormat =
+    ref<InsightShareFormat>('classic');
+
+const shareBackground =
+    ref<InsightShareBackground>('solid');
+
+const shareTouchStartX = ref<number | null>(null);
+const sharePreviewUrl = ref<string | null>(null);
+const shareBlob = ref<Blob | null>(null);
+const isGeneratingShare = ref(false);
+const isSharingInsight = ref(false);
+const shareError = ref<string | null>(null);
+
+function openShare(): void {
+    if (!insights.value || !hasCompletedSessions.value) {
+        return;
+    }
+
+    shareError.value = null;
+    shareFormat.value = 'classic';
+    shareBackground.value = 'solid';
+    isShareOpen.value = true;
+
+    void generateSharePreview();
+}
+
+function closeShare(): void {
+    isShareOpen.value = false;
+    shareError.value = null;
+
+    if (sharePreviewUrl.value) {
+        URL.revokeObjectURL(sharePreviewUrl.value);
+    }
+
+    sharePreviewUrl.value = null;
+    shareBlob.value = null;
+}
+
+async function generateSharePreview(): Promise<void> {
+    if (!insights.value) {
+        return;
+    }
+
+    isGeneratingShare.value = true;
+    shareError.value = null;
+
+    try {
+        const blob = await generateInsightSharePng({
+            insights: insights.value,
+            range: selectedRange.value,
+            format: shareFormat.value,
+            background: shareBackground.value,
+            accountName: accountName.value,
+        });
+
+        if (sharePreviewUrl.value) {
+            URL.revokeObjectURL(sharePreviewUrl.value);
+        }
+
+        shareBlob.value = blob;
+        sharePreviewUrl.value =
+            URL.createObjectURL(blob);
+    } catch (caught) {
+        shareBlob.value = null;
+
+        if (sharePreviewUrl.value) {
+            URL.revokeObjectURL(sharePreviewUrl.value);
+        }
+
+        sharePreviewUrl.value = null;
+
+        shareError.value =
+            caught instanceof Error
+                ? caught.message
+                : 'Unable to generate the insight image.';
+    } finally {
+        isGeneratingShare.value = false;
+    }
+}
+
+async function changeShareFormat(
+    format: InsightShareFormat,
+): Promise<void> {
+    if (
+        shareFormat.value === format ||
+        isGeneratingShare.value
+    ) {
+        return;
+    }
+
+    shareFormat.value = format;
+
+    await generateSharePreview();
+}
+
+function changeShareFormatByOffset(
+    offset: number,
+): void {
+    if (isGeneratingShare.value) {
+        return;
+    }
+
+    const currentIndex =
+        shareFormats.findIndex(
+            (format) =>
+                format.value === shareFormat.value,
+        );
+
+    const nextIndex =
+        (currentIndex + offset + shareFormats.length) %
+        shareFormats.length;
+
+    void changeShareFormat(
+        shareFormats[nextIndex].value,
+    );
+}
+
+function handleShareTouchStart(
+    event: TouchEvent,
+): void {
+    shareTouchStartX.value =
+        event.changedTouches[0]?.clientX ?? null;
+}
+
+function handleShareTouchEnd(
+    event: TouchEvent,
+): void {
+    const startX = shareTouchStartX.value;
+    const endX =
+        event.changedTouches[0]?.clientX ?? null;
+
+    shareTouchStartX.value = null;
+
+    if (
+        startX === null ||
+        endX === null
+    ) {
+        return;
+    }
+
+    const distance = endX - startX;
+
+    if (Math.abs(distance) < 45) {
+        return;
+    }
+
+    if (distance < 0) {
+        changeShareFormatByOffset(1);
+    } else {
+        changeShareFormatByOffset(-1);
+    }
+}
+
+async function changeShareBackground(
+    background: InsightShareBackground,
+): Promise<void> {
+    if (
+        shareBackground.value === background ||
+        isGeneratingShare.value
+    ) {
+        return;
+    }
+
+    shareBackground.value = background;
+
+    await generateSharePreview();
+}
+
+async function shareInsight(): Promise<void> {
+    if (
+        !shareBlob.value ||
+        isSharingInsight.value
+    ) {
+        return;
+    }
+
+    isSharingInsight.value = true;
+    shareError.value = null;
+
+    try {
+        const shared = await shareInsightPng(
+            shareBlob.value,
+            selectedRange.value,
+        );
+
+        if (!shared) {
+            downloadInsightPng(
+                shareBlob.value,
+                selectedRange.value,
+            );
+        }
+    } catch (caught) {
+        if (
+            caught instanceof DOMException &&
+            caught.name === 'AbortError'
+        ) {
+            return;
+        }
+
+        shareError.value =
+            caught instanceof Error
+                ? caught.message
+                : 'Unable to share the insight image.';
+    } finally {
+        isSharingInsight.value = false;
+    }
+}
+
+function downloadShareImage(): void {
+    if (!shareBlob.value) {
+        return;
+    }
+
+    downloadInsightPng(
+        shareBlob.value,
+        selectedRange.value,
+    );
+}
 
 async function loadInsights(
     range: FocusInsightsRange,
@@ -580,30 +842,70 @@ onMounted(() => {
                     </div>
 
                     <div
-                        class="inline-flex w-full overflow-x-auto rounded-xl border border-slate-200 bg-white p-1 shadow-sm sm:w-auto dark:border-slate-700 dark:bg-slate-900"
-                        aria-label="Insights date range"
+                        class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center"
                     >
+                        <div
+                            class="inline-flex w-full overflow-x-auto rounded-xl border border-slate-200 bg-white p-1 shadow-sm sm:w-auto dark:border-slate-700 dark:bg-slate-900"
+                            aria-label="Insights date range"
+                        >
+                            <button
+                                v-for="range in ranges"
+                                :key="range.value"
+                                type="button"
+                                class="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition"
+                                :class="selectedRange === range.value ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100'"
+                                :aria-pressed="
+                                    selectedRange ===
+                                    range.value
+                                "
+                                :disabled="
+                                    isLoading ||
+                                    isChangingRange ||
+                                    isGeneratingShare ||
+                                    isSharingInsight
+                                "
+                                @click="
+                                    changeRange(
+                                        range.value,
+                                    )
+                                "
+                            >
+                                {{ range.label }}
+                            </button>
+                        </div>
+
                         <button
-                            v-for="range in ranges"
-                            :key="range.value"
                             type="button"
-                            class="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition"
-                            :class="selectedRange === range.value ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100'"
-                            :aria-pressed="
-                                selectedRange ===
-                                range.value
-                            "
+                            class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                             :disabled="
                                 isLoading ||
-                                isChangingRange
+                                isChangingRange ||
+                                isGeneratingShare ||
+                                isSharingInsight ||
+                                !hasCompletedSessions
                             "
-                            @click="
-                                changeRange(
-                                    range.value,
-                                )
-                            "
+                            @click="openShare"
                         >
-                            {{ range.label }}
+                            <svg
+                                class="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M12 16V4m0 0 4.5 4.5M12 4 7.5 8.5M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"
+                                />
+                            </svg>
+
+                            {{
+                                isLoading ||
+                                isChangingRange
+                                    ? 'Loading…'
+                                    : 'Share'
+                            }}
                         </button>
                     </div>
                 </div>
@@ -1284,6 +1586,330 @@ onMounted(() => {
                     </div>
                 </template>
             </section>
+        </div>
+        <div
+            v-if="isShareOpen"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="share-insight-title"
+            @click.self="closeShare"
+        >
+            <div
+                class="flex max-h-[calc(100vh-2rem)] w-full max-w-xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-900"
+            >
+                <div
+                    class="flex items-center justify-between border-b border-slate-200 px-5 py-4 dark:border-slate-700"
+                >
+                    <div>
+                        <h2
+                            id="share-insight-title"
+                            class="text-base font-semibold text-slate-950 dark:text-slate-100"
+                        >
+                            Share your focus
+                        </h2>
+
+                        <p
+                            class="mt-1 text-sm text-slate-500 dark:text-slate-400"
+                        >
+                            Choose a design and share your progress.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+                        aria-label="Close share dialog"
+                        @click="closeShare"
+                    >
+                        <svg
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m6 6 12 12M18 6 6 18"
+                            />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="min-h-0 overflow-y-auto px-5 py-5">
+                    <div
+                        class="relative"
+                        @touchstart="handleShareTouchStart"
+                        @touchend="handleShareTouchEnd"
+                    >
+                        <button
+                            type="button"
+                            class="absolute left-0 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 text-slate-600 shadow-md transition hover:bg-slate-50 sm:flex dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+                            aria-label="Previous share design"
+                            :disabled="isGeneratingShare"
+                            @click="changeShareFormatByOffset(-1)"
+                        >
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="m15 18-6-6 6-6"
+                                />
+                            </svg>
+                        </button>
+
+                        <div
+                            class="flex justify-center overflow-hidden px-0 sm:px-10"
+                        >
+                            <div
+                                class="w-full max-w-[360px] overflow-hidden rounded-xl shadow-xl"
+                                :class="
+                                    shareBackground === 'transparent'
+                                        ? 'bg-slate-200 dark:bg-slate-700'
+                                        : 'bg-slate-950'
+                                "
+                            >
+                                <div
+                                    v-if="isGeneratingShare"
+                                    class="flex aspect-[4/5] items-center justify-center bg-slate-950"
+                                >
+                                    <div class="text-center">
+                                        <svg
+                                            class="mx-auto h-8 w-8 animate-spin text-white"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                class="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                stroke-width="3"
+                                            />
+                                            <path
+                                                class="opacity-90"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 0 1 8-8v3a5 5 0 0 0-5 5H4Z"
+                                            />
+                                        </svg>
+
+                                        <p
+                                            class="mt-3 text-sm text-white/70"
+                                        >
+                                            Preparing your share image…
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <img
+                                    v-else-if="sharePreviewUrl"
+                                    :src="sharePreviewUrl"
+                                    alt="Focura focus insights share preview"
+                                    class="block h-auto w-full select-none"
+                                    draggable="false"
+                                />
+
+                                <div
+                                    v-else
+                                    class="flex aspect-[4/5] items-center justify-center bg-slate-950 p-6 text-center"
+                                >
+                                    <p
+                                        class="text-sm text-white/70"
+                                    >
+                                        Preview unavailable.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="absolute right-0 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 text-slate-600 shadow-md transition hover:bg-slate-50 sm:flex dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+                            aria-label="Next share design"
+                            :disabled="isGeneratingShare"
+                            @click="changeShareFormatByOffset(1)"
+                        >
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="m9 18 6-6-6-6"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div
+                        class="mt-4 flex items-center justify-center gap-2"
+                    >
+                        <button
+                            v-for="format in shareFormats"
+                            :key="format.value"
+                            type="button"
+                            class="rounded-full px-3.5 py-1.5 text-xs font-semibold transition"
+                            :class="
+                                shareFormat === format.value
+                                    ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
+                                    : 'bg-slate-100 text-slate-500 hover:text-slate-900 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-slate-100'
+                            "
+                            :disabled="isGeneratingShare"
+                            @click="changeShareFormat(format.value)"
+                        >
+                            {{ format.label }}
+                        </button>
+                    </div>
+
+                    <div class="mt-5">
+                        <p
+                            class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+                        >
+                            Background
+                        </p>
+
+                        <div
+                            class="grid grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1 dark:bg-slate-800"
+                        >
+                            <button
+                                type="button"
+                                class="rounded-lg px-3 py-2.5 text-sm font-medium transition"
+                                :class="
+                                    shareBackground === 'solid'
+                                        ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-700 dark:text-white'
+                                        : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'
+                                "
+                                :disabled="isGeneratingShare"
+                                @click="
+                                    changeShareBackground(
+                                        'solid',
+                                    )
+                                "
+                            >
+                                Solid
+                            </button>
+
+                            <button
+                                type="button"
+                                class="rounded-lg px-3 py-2.5 text-sm font-medium transition"
+                                :class="
+                                    shareBackground === 'transparent'
+                                        ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-700 dark:text-white'
+                                        : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'
+                                "
+                                :disabled="isGeneratingShare"
+                                @click="
+                                    changeShareBackground(
+                                        'transparent',
+                                    )
+                                "
+                            >
+                                Transparent
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="shareError"
+                        class="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-700"
+                        role="alert"
+                    >
+                        {{ shareError }}
+                    </div>
+                </div>
+
+                <div
+                    class="flex flex-col gap-2 border-t border-slate-200 px-5 py-4 sm:flex-row sm:justify-end dark:border-slate-700"
+                >
+                    <button
+                        type="button"
+                        class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+                        :disabled="
+                            isGeneratingShare ||
+                            !shareBlob
+                        "
+                        @click="downloadShareImage"
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 4v11m0 0 4-4m-4 4-4-4M5 20h14"
+                            />
+                        </svg>
+
+                        Download PNG
+                    </button>
+
+                    <button
+                        type="button"
+                        class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        :disabled="
+                            isGeneratingShare ||
+                            isSharingInsight ||
+                            !shareBlob
+                        "
+                        @click="shareInsight"
+                    >
+                        <svg
+                            v-if="!isSharingInsight"
+                            class="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 16V4m0 0 4.5 4.5M12 4 7.5 8.5M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"
+                            />
+                        </svg>
+
+                        <svg
+                            v-else
+                            class="h-4 w-4 animate-spin"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="3"
+                            />
+                            <path
+                                class="opacity-90"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 0 1 8-8v3a5 5 0 0 0-5 5H4Z"
+                            />
+                        </svg>
+
+                        {{ isSharingInsight ? 'Sharing…' : 'Share image' }}
+                    </button>
+                </div>
+            </div>
         </div>
     </main>
 </template>
