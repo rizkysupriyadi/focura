@@ -340,6 +340,7 @@ export async function recordSessionInterruption(
 
     return {
         id: response.data.id,
+        focus_session_id: response.data.focus_session_id,
         started_at: response.data.started_at,
         ended_at: response.data.ended_at,
         duration_seconds:

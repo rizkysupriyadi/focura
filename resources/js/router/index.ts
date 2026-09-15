@@ -7,6 +7,11 @@ import {
     useAuth,
 } from '@/composables/useAuth';
 
+import {
+    startTabLoading,
+    stopTabLoading,
+} from '@/services/tabLoading';
+
 import Focus from '@/pages/Focus.vue';
 import ForgotPassword from '@/pages/ForgotPassword.vue';
 import Insights from '@/pages/Insights.vue';
@@ -91,6 +96,8 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
+    startTabLoading();
+
     const {
         isAuthenticated,
         initializeAuth,
@@ -108,6 +115,14 @@ router.beforeEach(async (to) => {
     }
 
     return true;
+});
+
+router.afterEach(() => {
+    stopTabLoading();
+});
+
+router.onError(() => {
+    stopTabLoading();
 });
 
 export default router;
