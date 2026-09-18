@@ -267,3 +267,166 @@ private final class RegistrationTestRepository: AuthRepository, @unchecked Senda
         0
     }
 }
+
+@MainActor
+final class FocusSessionStoreTests: XCTestCase {
+    func testWaitForCreationCompletesPendingSessionCreation() async {
+        let repository = FocusSessionStoreTestRepository()
+        let store = FocusSessionStore(repository: repository)
+
+        let startedAt = Date(timeIntervalSince1970: 1_800_000_000)
+
+        _ = await store.start(
+            mode: .focus,
+            title: "Test session",
+            plannedDurationSeconds: 1500,
+            startedAt: startedAt
+        )
+
+        XCTAssertTrue(store.isCreating)
+        XCTAssertNil(store.session)
+
+        await Task.yield()
+        repository.finishCreation()
+
+        await store.waitForCreation()
+
+        XCTAssertFalse(store.isCreating)
+        XCTAssertEqual(store.session?.id, 101)
+        XCTAssertEqual(store.session?.status, .active)
+    }
+
+    func testCompleteRejectsUntilSessionCreationHasFinished() async {
+        let repository = FocusSessionStoreTestRepository()
+        let store = FocusSessionStore(repository: repository)
+
+        let completedAt = Date(timeIntervalSince1970: 1_800_001_500)
+
+        let result = await store.complete(at: completedAt)
+
+        XCTAssertFalse(result)
+        XCTAssertFalse(repository.completeCalled)
+    }
+
+    func testInterruptionRequiresActiveFocusSession() async {
+        let repository = FocusSessionStoreTestRepository()
+        let store = FocusSessionStore(repository: repository)
+
+        let startedAt = Date(timeIntervalSince1970: 1_800_000_000)
+        let endedAt = startedAt.addingTimeInterval(10)
+
+        let result = await store.recordInterruption(
+            startedAt: startedAt,
+            endedAt: endedAt
+        )
+
+        XCTAssertFalse(result)
+        XCTAssertFalse(repository.interruptionCalled)
+    }
+}
+
+@MainActor
+private final class FocusSessionStoreTestRepository:
+    FocusSessionRepository {
+
+    private(set) var completeCalled = false
+    private(set) var interruptionCalled = false
+
+    private var creationContinuation:
+        CheckedContinuation<FocusSession, Never>?
+
+    func create(
+        mode: TimerMode,
+        title: String?,
+        plannedDurationSeconds: Int,
+        startedAt: Date
+    ) async throws -> FocusSession {
+        await withCheckedContinuation { continuation in
+            creationContinuation = continuation
+        }
+    }
+
+    func finishCreation() {
+        creationContinuation?.resume(
+            returning: FocusSession(
+                id: 101,
+                userID: 42,
+                visitorID: nil,
+                mode: .focus,
+                title: "Test session",
+                plannedDurationSeconds: 1500,
+                actualDurationSeconds: 0,
+                focusedDurationSeconds: 0,
+                interruptedDurationSeconds: 0,
+                interruptionCount: 0,
+                focusIntegrity: nil,
+                status: .active,
+                startedAt: Date(timeIntervalSince1970: 1_800_000_000),
+                endedAt: nil,
+                interruptions: [],
+                createdAt: nil,
+                updatedAt: nil
+            )
+        )
+
+        creationContinuation = nil
+    }
+
+    func pause(
+        sessionID: Int,
+        startedAt: Date
+    ) async throws -> FocusSession {
+        fatalError("Not used by this test.")
+    }
+
+    func resume(
+        sessionID: Int,
+        endedAt: Date
+    ) async throws -> FocusSession {
+        fatalError("Not used by this test.")
+    }
+
+    func complete(
+        sessionID: Int,
+        endedAt: Date
+    ) async throws -> FocusSession {
+        completeCalled = true
+
+        return FocusSession(
+            id: sessionID,
+            userID: 42,
+            visitorID: nil,
+            mode: .focus,
+            title: "Test session",
+            plannedDurationSeconds: 1500,
+            actualDurationSeconds: 1500,
+            focusedDurationSeconds: 1500,
+            interruptedDurationSeconds: 0,
+            interruptionCount: 0,
+            focusIntegrity: 100,
+            status: .completed,
+            startedAt: Date(timeIntervalSince1970: 1_800_000_000),
+            endedAt: endedAt,
+            interruptions: [],
+            createdAt: nil,
+            updatedAt: nil
+        )
+    }
+
+    func cancel(
+        sessionID: Int,
+        cancelledAt: Date
+    ) async throws -> FocusSession {
+        fatalError("Not used by this test.")
+    }
+
+    func recordInterruption(
+        sessionID: Int,
+        startedAt: Date,
+        endedAt: Date
+    ) async throws -> FocusSessionInterruption {
+        interruptionCalled = true
+
+        fatalError("Not used by this test.")
+    }
+}

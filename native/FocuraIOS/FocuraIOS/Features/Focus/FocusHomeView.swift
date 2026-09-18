@@ -855,6 +855,20 @@ struct FocusHomeView: View {
             interruptionStartedAt = Date()
 
         case .active:
+            /*
+             * Reconcile the local timer against its timestamp before
+             * recording an interruption. If the deadline passed while
+             * the app was inactive/backgrounded, the timer is completed
+             * rather than treating post-deadline time as an interruption.
+             */
+            timerEngine?.update()
+
+            if timerEngine?.state.status == .completed {
+                interruptionStartedAt = nil
+                timerRefreshDate = Date()
+                return
+            }
+
             guard let startedAt = interruptionStartedAt else {
                 return
             }
@@ -1095,6 +1109,12 @@ struct FocusHomeView: View {
 
         let store = focusSessionStore
         let completedAt = expectedEndAt
+
+        /*
+         * The local timer has already completed. Backend synchronization
+         * must wait for the asynchronous session creation if necessary.
+         */
+        await store.waitForCreation()
 
         let completed = await store.complete(at: completedAt)
 
