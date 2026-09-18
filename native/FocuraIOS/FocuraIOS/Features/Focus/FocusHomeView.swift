@@ -1334,6 +1334,21 @@ struct FocusHomeView: View {
 }
 
 private struct PreviewFocusHomeSessionRepository: FocusSessionRepository {
+    func list(
+        page: Int,
+        perPage: Int,
+        mode: TimerMode?,
+        status: FocusSessionStatus?
+    ) async throws -> FocusSessionPage {
+        FocusSessionPage(
+            data: [],
+            currentPage: page,
+            lastPage: page,
+            perPage: perPage,
+            total: 0
+        )
+    }
+
     func create(
         mode: TimerMode,
         title: String?,
@@ -1399,6 +1414,21 @@ private struct PreviewFocusHomeSessionRepository: FocusSessionRepository {
 }
 
 private struct PreviewFocusSessionRepository: FocusSessionRepository {
+    func list(
+        page: Int,
+        perPage: Int,
+        mode: TimerMode?,
+        status: FocusSessionStatus?
+    ) async throws -> FocusSessionPage {
+        FocusSessionPage(
+            data: [],
+            currentPage: page,
+            lastPage: page,
+            perPage: perPage,
+            total: 0
+        )
+    }
+
     func create(
         mode: TimerMode,
         title: String?,

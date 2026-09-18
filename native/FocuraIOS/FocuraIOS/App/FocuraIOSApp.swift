@@ -13,6 +13,7 @@ struct FocuraIOSApp: App {
         WindowGroup {
             AppRootView(
                 authenticationState: container.authenticationState,
+                focusSessionRepository: container.focusSessionRepository,
                 focusSessionStore: container.focusSessionStore
             )
             .environment(container.authenticationState)
@@ -22,6 +23,7 @@ struct FocuraIOSApp: App {
 
 private struct AppRootView: View {
     @Bindable var authenticationState: AuthenticationState
+    let focusSessionRepository: any FocusSessionRepository
     let focusSessionStore: FocusSessionStore
 
     var body: some View {
@@ -37,6 +39,7 @@ private struct AppRootView: View {
                 case .authenticated:
                     MainAppView(
                         user: authenticatedUser,
+                        focusSessionRepository: focusSessionRepository,
                         focusSessionStore: focusSessionStore
                     )
 
@@ -122,10 +125,12 @@ private struct AuthFlowView: View {
 
 private struct MainAppView: View {
     let user: AuthUser
+    let focusSessionRepository: any FocusSessionRepository
     let focusSessionStore: FocusSessionStore
 
     var body: some View {
         ContentView(
+            focusSessionRepository: focusSessionRepository,
             focusSessionStore: focusSessionStore,
             user: user
         )

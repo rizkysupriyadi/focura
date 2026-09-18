@@ -15,6 +15,55 @@ struct RemoteFocusSessionRepository: FocusSessionRepository, Sendable {
         self.visitorIdentityStore = visitorIdentityStore
     }
 
+    func list(
+        page: Int,
+        perPage: Int,
+        mode: TimerMode?,
+        status: FocusSessionStatus?
+    ) async throws -> FocusSessionPage {
+        var components = URLComponents()
+        components.path = "/focus-sessions"
+        components.queryItems = [
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "per_page", value: String(perPage))
+        ]
+
+        if let mode {
+            components.queryItems?.append(
+                URLQueryItem(name: "mode", value: mode.rawValue)
+            )
+        }
+
+        if let status {
+            components.queryItems?.append(
+                URLQueryItem(name: "status", value: status.rawValue)
+            )
+        }
+
+        guard let path = components.string else {
+            throw APIError.invalidURL
+        }
+
+        let response = try await request(
+            path: path,
+            method: "GET",
+            body: nil
+        )
+
+        do {
+            let envelope = try APIJSONDecoder.make().decode(
+                ResourceEnvelope<FocusSessionListResponse>.self,
+                from: response.data
+            )
+
+            return envelope.data.page()
+        } catch {
+            throw APIError.decoding(
+                message: error.localizedDescription
+            )
+        }
+    }
+
     func create(
         mode: TimerMode,
         title: String?,

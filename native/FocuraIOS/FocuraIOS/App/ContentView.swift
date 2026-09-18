@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    let focusSessionRepository: any FocusSessionRepository
     let focusSessionStore: FocusSessionStore
     let user: AuthUser
 
@@ -16,9 +17,9 @@ struct ContentView: View {
                 )
             }
 
-            NavigationStack {
-                SessionsRootView()
-            }
+            SessionsView(
+                repository: focusSessionRepository
+            )
             .tabItem {
                 Label(
                     "Sessions",
@@ -54,15 +55,6 @@ struct ContentView: View {
         .background(
             FocuraColors.surface
                 .ignoresSafeArea()
-        )
-    }
-}
-
-private struct SessionsRootView: View {
-    var body: some View {
-        PlaceholderRootView(
-            title: "Sessions",
-            subtitle: "Your focus history will appear here."
         )
     }
 }
@@ -114,6 +106,7 @@ private struct PlaceholderRootView: View {
 
 #Preview {
     ContentView(
+        focusSessionRepository: PreviewContentFocusSessionRepository(),
         focusSessionStore: FocusSessionStore(
             repository: PreviewContentFocusSessionRepository()
         ),
@@ -128,6 +121,21 @@ private struct PlaceholderRootView: View {
 }
 
 private struct PreviewContentFocusSessionRepository: FocusSessionRepository {
+    func list(
+        page: Int,
+        perPage: Int,
+        mode: TimerMode?,
+        status: FocusSessionStatus?
+    ) async throws -> FocusSessionPage {
+        FocusSessionPage(
+            data: [],
+            currentPage: page,
+            lastPage: page,
+            perPage: perPage,
+            total: 0
+        )
+    }
+
     func create(
         mode: TimerMode,
         title: String?,

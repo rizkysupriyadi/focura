@@ -329,6 +329,21 @@ final class FocusSessionStoreTests: XCTestCase {
 private final class FocusSessionStoreTestRepository:
     FocusSessionRepository {
 
+    func list(
+        page: Int,
+        perPage: Int,
+        mode: TimerMode?,
+        status: FocusSessionStatus?
+    ) async throws -> FocusSessionPage {
+        FocusSessionPage(
+            data: [],
+            currentPage: page,
+            lastPage: page,
+            perPage: perPage,
+            total: 0
+        )
+    }
+
     private(set) var completeCalled = false
     private(set) var interruptionCalled = false
 

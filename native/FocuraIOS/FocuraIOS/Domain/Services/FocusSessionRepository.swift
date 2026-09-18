@@ -1,6 +1,13 @@
 import Foundation
 
 protocol FocusSessionRepository: Sendable {
+    func list(
+        page: Int,
+        perPage: Int,
+        mode: TimerMode?,
+        status: FocusSessionStatus?
+    ) async throws -> FocusSessionPage
+
     func create(
         mode: TimerMode,
         title: String?,
