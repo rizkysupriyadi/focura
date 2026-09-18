@@ -1,0 +1,83 @@
+name: FocuraIOS
+
+options:
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+  developmentLanguage: en
+
+configs:
+  Debug: debug
+  Release: release
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+    SUPPORTS_MACCATALYST: "NO"
+    DEVELOPMENT_TEAM: "K7D8Z4L88Q"
+  configs:
+    Debug:
+      SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+      DEBUG_INFORMATION_FORMAT: dwarf
+    Release:
+      SWIFT_OPTIMIZATION_LEVEL: "-O"
+      DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym"
+
+targets:
+  FocuraIOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: FocuraIOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.focura.FocuraIOS
+        PRODUCT_NAME: Focura
+        PRODUCT_MODULE_NAME: FocuraIOS
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_KEY_CFBundleDisplayName: Focura
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "Apple Development"
+        SWIFT_EMIT_LOC_STRINGS: YES
+      configs:
+        Debug:
+          ENABLE_PREVIEWS: YES
+        Release:
+          ENABLE_PREVIEWS: NO
+    scheme:
+      gatherCoverageData: true
+      testTargets:
+        - FocuraIOSTests
+      run:
+        config: Debug
+      archive:
+        config: Release
+
+  FocuraIOSTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: FocuraIOSTests
+    dependencies:
+      - target: FocuraIOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.focura.FocuraIOSTests
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "Apple Development"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Focura.app/Focura"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+      configs:
+        Debug:
+          ENABLE_TESTABILITY: YES
+        Release:
+          ENABLE_TESTABILITY: NO

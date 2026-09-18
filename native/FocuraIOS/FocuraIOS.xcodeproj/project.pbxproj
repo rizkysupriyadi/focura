@@ -1,0 +1,800 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DFCE8A934C2E4128B36B05EE /* FocusSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E874786FB18B45F58E43938A /* FocusSessionStore.swift */; };
+		EAE9E80F4AB846BA876C4079 /* RemoteFocusSessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7652B760D744838B28551F /* RemoteFocusSessionRepository.swift */; };
+		2492FE2B219F442EB04BC3C5 /* FocusSessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89861853D9484BC8B6B1D8BC /* FocusSessionRepository.swift */; };
+		BB60CEDE0C564022B6DCD3DE /* VisitorIdentityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F41D9EF50E4403BE696887 /* VisitorIdentityStore.swift */; };
+		6ECE40CA10644BCA85A0E01C /* FocusSessionRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AF615FBE3545198D5408BF /* FocusSessionRequests.swift */; };
+		E3079ECD006E477892DA61B5 /* FocusSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0878543F5B4636AF1DB547 /* FocusSession.swift */; };		CBD8C5855CA2485CBC3AF344 /* FocusSessionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6C444CF824116A2A283EA /* FocusSessionStatus.swift */; };
+		B8E7D6C5F4A3029182736451 /* TimerDurationSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D6C5B4E3F2918071625340 /* TimerDurationSelection.swift */; };
+
+		00FBC13CD15ACD3F456A3882 /* FocuraIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD54C45D43D2111DA5A56521 /* FocuraIOSApp.swift */; };
+		0B17250069992AA5A5DC2500 /* AuthAPIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAE1A816C5315B03F26F17D /* AuthAPIResponse.swift */; };
+		0C1658AB5233B2B1E82D494B /* AuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539C6613646EBFEAA334D1DE /* AuthRepository.swift */; };
+		1D92844E331DEAA2FA147064 /* SettingsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C143D504255199E54D7D1F2 /* SettingsModels.swift */; };
+		232E850076B8A871E2760893 /* TimerMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4B829621B6EDB6802D3AFB /* TimerMode.swift */; };
+		27B2A9FBF9A7866E4AD986C4 /* focura-icon.svg in Resources */ = {isa = PBXBuildFile; fileRef = FD12F3B7829A12499BD7BE41 /* focura-icon.svg */; };
+		2E45B2D35518B5DDBEE6E544 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B167C97AAFA8DDBCFD90BE /* AppLogger.swift */; };
+		3CDBBD75577D8474A8BCCDCE /* SettingsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F43311BFB25EEBD0A72A12 /* SettingsSectionView.swift */; };
+		44A597C6D8150E817529CC94 /* AuthAPIContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1789AC3A7DE2BCE41CC293EE /* AuthAPIContractTests.swift */; };
+		49290A2169233B914285823E /* AuthSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B6F063C1F024F8471FD2CE /* AuthSessionStore.swift */; };
+		4AC2E43AA298CEB3C1B9FF20 /* TimerClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD5575500154584D3B68246 /* TimerClock.swift */; };
+		510A8EA1979AE52FC3D1838C /* AuthRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E972443F630325005FD0A1 /* AuthRequests.swift */; };
+		533A50D7FFE570A3B257EF16 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EF6535D54E98BC36C0D054 /* AppConfiguration.swift */; };
+		53E764CDA3258934426D0656 /* AuthUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB68B2A36FAB7C82B8E0844 /* AuthUser.swift */; };
+		5C713A6C9CD7451B0EE66E4F /* TimerEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55CDA1CD01E3F5A1B499CE2F /* TimerEngineTests.swift */; };
+		61F9A9698ECF4F218D7E6B9F /* FocusHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4325CE1735BAEE2D8C174E07 /* FocusHomeView.swift */; };
+		63EE6AC861EE302EBC4C9F6E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1241FC1C709CB38A591C765B /* SettingsView.swift */; };
+		6C6BD756958EC5145D91AC97 /* TimerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEDED15904326F42A56ECF3 /* TimerConfiguration.swift */; };
+		7243CB7A0FFE6E1B0E7B7598 /* FocuraColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E812169FE76D3CF8F55D19FA /* FocuraColors.swift */; };
+		7696EAC036E5DC3F82915948 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4F7DF2615B8D788B1E9328 /* ContentView.swift */; };
+		78F0AD871FED89620210218B /* GuestSessionClaimResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA84152813FFA37FA7FDDC71 /* GuestSessionClaimResponse.swift */; };
+		7950562994A5B012B323161F /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08062F79E8F1CB9F80E2D877 /* SettingsStore.swift */; };
+		7B2E01297D50B0DD1736F5D6 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFB90264F5304B04739C0F /* SettingsRowView.swift */; };
+		807C8B97D92C7B0A9B3DC887 /* FocuraSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A926FF64E6B23F82D4A4A20 /* FocuraSpacing.swift */; };
+		91BDE84789B01343EDB63AA3 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD030E7B46466E3C75D377C3 /* RegisterView.swift */; };
+		98E8CACE2C1CED97A164538E /* PersistenceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3F2773A406D8A8BFD2F2A5 /* PersistenceError.swift */; };
+		9F38DE1F2B9D9D6D8F6F6A4B /* APIJSONDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45131A35E76D1E5EA7ACBCE5 /* APIJSONDecoder.swift */; };
+		A32F52F75AEBE2F1DC264806 /* FocuraIOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D374E10BD2BA4D649BAAF1F6 /* FocuraIOSTests.swift */; };
+		A9DB1CC6C1C7A77B1A0FDCCB /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0147314F05C886E6A8AE4A33 /* AppContainer.swift */; };
+		B56C75098DEFF4F6D3FE91A8 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C663771AEFBB387800C608 /* APIClient.swift */; };
+		B9A5AB31B707FD555212DCA4 /* SecureStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2885AD4324FB63FC8111A882 /* SecureStore.swift */; };
+		C0E201C62E6B544AE1397560 /* TimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD7D8F68CE76ABD1E33C10B /* TimerState.swift */; };
+		C4CDABDC9662B62E0A6D60A6 /* SettingsToggleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD034D38F7A3355700E39F8D /* SettingsToggleRow.swift */; };
+		C677EDED77EADCDDA0D24DA2 /* FocuraRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C9A506B6C62290A831FA9B /* FocuraRadius.swift */; };
+		D777BFC27D8A79FD8CE823B0 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC03197490B18F3CC45927C /* APIError.swift */; };
+		D7A4AD6F29BAA1DA60416AF6 /* AuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7222508CA67C45161EE0C482 /* AuthSession.swift */; };
+		E28B9F049DA6C8FB0F710256 /* TimerStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA947E09F3F54D7F1CE0AD8 /* TimerStatus.swift */; };
+		EB7C52574D430486573DBF5E /* FocuraTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9E2E7603BACC908FFAB60 /* FocuraTypography.swift */; };
+		EBA393A24DC815E81D823325 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F59A98EB15F0851270D00F /* KeychainStore.swift */; };
+		F1A99C1C8CDD3153BCC621B2 /* RemoteAuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB650B563AB3EE8489D58E /* RemoteAuthRepository.swift */; };
+		F1B33FBF7ED62ED126F2944F /* TimerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBF207AECBA3E4AE2B7C11C3 /* TimerEngine.swift */; };
+		F292BDB859D08FAB3C6993C3 /* AuthenticationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE36DE9139CFD1BF00A7863 /* AuthenticationState.swift */; };
+		F792DCB45922AA0450B43431 /* FocuraButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5915429BABE178B1A3018B1F /* FocuraButtonStyle.swift */; };
+		FC3A45B465E033F84975D01D /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DFCCBAC16DF0DBF73EEC2 /* HTTPClient.swift */; };
+		FE58EEA4A2825E0DDAA4CC51 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950F4AFD9BD8D3B2422179A9 /* LoginView.swift */; };
+		FEF53ADA88310EC9167A5905 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4403ABD5F8CB363933AB80A5 /* PersistenceController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F3D91C525BE0939AA3FCA258 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4D0DDDC64BAF5E5ACCE5A074 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 86FC4D2FCD93B4EBD4DC9CB1;
+			remoteInfo = FocuraIOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		E874786FB18B45F58E43938A /* FocusSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSessionStore.swift; sourceTree = "<group>"; };
+		2A7652B760D744838B28551F /* RemoteFocusSessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFocusSessionRepository.swift; sourceTree = "<group>"; };
+		89861853D9484BC8B6B1D8BC /* FocusSessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSessionRepository.swift; sourceTree = "<group>"; };
+		11F41D9EF50E4403BE696887 /* VisitorIdentityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitorIdentityStore.swift; sourceTree = "<group>"; };
+		93AF615FBE3545198D5408BF /* FocusSessionRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSessionRequests.swift; sourceTree = "<group>"; };
+		2A0878543F5B4636AF1DB547 /* FocusSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSession.swift; sourceTree = "<group>"; };		6FE6C444CF824116A2A283EA /* FocusSessionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSessionStatus.swift; sourceTree = "<group>"; };
+		A7D6C5B4E3F2918071625340 /* TimerDurationSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerDurationSelection.swift; sourceTree = "<group>"; };
+
+		0147314F05C886E6A8AE4A33 /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
+		05E972443F630325005FD0A1 /* AuthRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRequests.swift; sourceTree = "<group>"; };
+		08062F79E8F1CB9F80E2D877 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		0A926FF64E6B23F82D4A4A20 /* FocuraSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocuraSpacing.swift; sourceTree = "<group>"; };
+		0E4F7DF2615B8D788B1E9328 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1241FC1C709CB38A591C765B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		16F43311BFB25EEBD0A72A12 /* SettingsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSectionView.swift; sourceTree = "<group>"; };
+		1789AC3A7DE2BCE41CC293EE /* AuthAPIContractTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPIContractTests.swift; sourceTree = "<group>"; };
+		195DFCCBAC16DF0DBF73EEC2 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		1AEDED15904326F42A56ECF3 /* TimerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerConfiguration.swift; sourceTree = "<group>"; };
+		25EF6535D54E98BC36C0D054 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
+		2885AD4324FB63FC8111A882 /* SecureStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStore.swift; sourceTree = "<group>"; };
+		32F59A98EB15F0851270D00F /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		3BEB650B563AB3EE8489D58E /* RemoteAuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAuthRepository.swift; sourceTree = "<group>"; };
+		4325CE1735BAEE2D8C174E07 /* FocusHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusHomeView.swift; sourceTree = "<group>"; };
+		4403ABD5F8CB363933AB80A5 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		45131A35E76D1E5EA7ACBCE5 /* APIJSONDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIJSONDecoder.swift; sourceTree = "<group>"; };
+		4AD7D8F68CE76ABD1E33C10B /* TimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerState.swift; sourceTree = "<group>"; };
+		4B494B5F0265592B24A57A56 /* FocuraIOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = FocuraIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C143D504255199E54D7D1F2 /* SettingsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModels.swift; sourceTree = "<group>"; };
+		539C6613646EBFEAA334D1DE /* AuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepository.swift; sourceTree = "<group>"; };
+		55CDA1CD01E3F5A1B499CE2F /* TimerEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerEngineTests.swift; sourceTree = "<group>"; };
+		57B6F063C1F024F8471FD2CE /* AuthSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSessionStore.swift; sourceTree = "<group>"; };
+		5915429BABE178B1A3018B1F /* FocuraButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocuraButtonStyle.swift; sourceTree = "<group>"; };
+		5B3F2773A406D8A8BFD2F2A5 /* PersistenceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceError.swift; sourceTree = "<group>"; };
+		5DA9E2E7603BACC908FFAB60 /* FocuraTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocuraTypography.swift; sourceTree = "<group>"; };
+		5DC03197490B18F3CC45927C /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		6DB68B2A36FAB7C82B8E0844 /* AuthUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthUser.swift; sourceTree = "<group>"; };
+		6FE5878EED2C8F518CA82755 /* FocuraIOSTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FocuraIOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7222508CA67C45161EE0C482 /* AuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
+		75C9A506B6C62290A831FA9B /* FocuraRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocuraRadius.swift; sourceTree = "<group>"; };
+		7DA947E09F3F54D7F1CE0AD8 /* TimerStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerStatus.swift; sourceTree = "<group>"; };
+		7EE36DE9139CFD1BF00A7863 /* AuthenticationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationState.swift; sourceTree = "<group>"; };
+		89B167C97AAFA8DDBCFD90BE /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
+		950F4AFD9BD8D3B2422179A9 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		B3C663771AEFBB387800C608 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		BBAE1A816C5315B03F26F17D /* AuthAPIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPIResponse.swift; sourceTree = "<group>"; };
+		BD030E7B46466E3C75D377C3 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		BDDFB90264F5304B04739C0F /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
+		BE4B829621B6EDB6802D3AFB /* TimerMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerMode.swift; sourceTree = "<group>"; };
+		CBF207AECBA3E4AE2B7C11C3 /* TimerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerEngine.swift; sourceTree = "<group>"; };
+		D374E10BD2BA4D649BAAF1F6 /* FocuraIOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocuraIOSTests.swift; sourceTree = "<group>"; };
+		DD54C45D43D2111DA5A56521 /* FocuraIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocuraIOSApp.swift; sourceTree = "<group>"; };
+		E812169FE76D3CF8F55D19FA /* FocuraColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocuraColors.swift; sourceTree = "<group>"; };
+		EA84152813FFA37FA7FDDC71 /* GuestSessionClaimResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestSessionClaimResponse.swift; sourceTree = "<group>"; };
+		EBD5575500154584D3B68246 /* TimerClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerClock.swift; sourceTree = "<group>"; };
+		FD034D38F7A3355700E39F8D /* SettingsToggleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsToggleRow.swift; sourceTree = "<group>"; };
+		FD12F3B7829A12499BD7BE41 /* focura-icon.svg */ = {isa = PBXFileReference; path = "focura-icon.svg"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		17C73C6E994749B92DFDC034 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4B494B5F0265592B24A57A56 /* FocuraIOS.app */,
+				6FE5878EED2C8F518CA82755 /* FocuraIOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AE4D1207D99A0C10F7530F6 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				BDDFB90264F5304B04739C0F /* SettingsRowView.swift */,
+				16F43311BFB25EEBD0A72A12 /* SettingsSectionView.swift */,
+				FD034D38F7A3355700E39F8D /* SettingsToggleRow.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2D15C1EB8A81CE871E356ED1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			2A7652B760D744838B28551F /* RemoteFocusSessionRepository.swift */,
+			89861853D9484BC8B6B1D8BC /* FocusSessionRepository.swift */,
+				539C6613646EBFEAA334D1DE /* AuthRepository.swift */,
+				EBD5575500154584D3B68246 /* TimerClock.swift */,
+				CBF207AECBA3E4AE2B7C11C3 /* TimerEngine.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		2E2EFC7AE75066E83B40C16D /* FocuraIOSTests */ = {
+			isa = PBXGroup;
+			children = (
+			E7DDA9E01E7640CC8130A706 /* TimerDurationSelectionTests.swift */,
+				1789AC3A7DE2BCE41CC293EE /* AuthAPIContractTests.swift */,
+				D374E10BD2BA4D649BAAF1F6 /* FocuraIOSTests.swift */,
+				55CDA1CD01E3F5A1B499CE2F /* TimerEngineTests.swift */,
+			);
+			path = FocuraIOSTests;
+			sourceTree = "<group>";
+		};
+		2E9629FA0C1C8548A3E5D004 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				89B167C97AAFA8DDBCFD90BE /* AppLogger.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		320BBDDB13339A4E37031D76 = {
+			isa = PBXGroup;
+			children = (
+				D296D54397AFA74966745562 /* FocuraIOS */,
+				2E2EFC7AE75066E83B40C16D /* FocuraIOSTests */,
+				17C73C6E994749B92DFDC034 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		373332CA1A758ADB68098D66 /* AppIcon */ = {
+			isa = PBXGroup;
+			children = (
+				FD12F3B7829A12499BD7BE41 /* focura-icon.svg */,
+			);
+			path = AppIcon;
+			sourceTree = "<group>";
+		};
+		3D662881897AC6BFAE23EF4F /* App */ = {
+			isa = PBXGroup;
+			children = (
+				0147314F05C886E6A8AE4A33 /* AppContainer.swift */,
+				0E4F7DF2615B8D788B1E9328 /* ContentView.swift */,
+				DD54C45D43D2111DA5A56521 /* FocuraIOSApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		48ED026C6BE829750BFC9448 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				B3C663771AEFBB387800C608 /* APIClient.swift */,
+				5DC03197490B18F3CC45927C /* APIError.swift */,
+				45131A35E76D1E5EA7ACBCE5 /* APIJSONDecoder.swift */,
+				195DFCCBAC16DF0DBF73EEC2 /* HTTPClient.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		5268F6FA8B22711219B069E0 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				5915429BABE178B1A3018B1F /* FocuraButtonStyle.swift */,
+				E812169FE76D3CF8F55D19FA /* FocuraColors.swift */,
+				75C9A506B6C62290A831FA9B /* FocuraRadius.swift */,
+				0A926FF64E6B23F82D4A4A20 /* FocuraSpacing.swift */,
+				5DA9E2E7603BACC908FFAB60 /* FocuraTypography.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		687CED7082C3062E026AFB85 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				D738E8748194194C502EAA8F /* Authentication */,
+				E74393EC80DCAC98EC00F616 /* Configuration */,
+				2E9629FA0C1C8548A3E5D004 /* Logging */,
+				48ED026C6BE829750BFC9448 /* Networking */,
+				A3C475170E4FF56926DF22BA /* Persistence */,
+				FD7BBAC2C7F35F2BE3A33A36 /* Security */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		84BB8607B11BBDF477FF2FE6 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				5268F6FA8B22711219B069E0 /* Theme */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		8FC06280F49EB0387D1042FC /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				950F4AFD9BD8D3B2422179A9 /* LoginView.swift */,
+				BD030E7B46466E3C75D377C3 /* RegisterView.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		95095836A284C5D7CA56D1F8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			93AF615FBE3545198D5408BF /* FocusSessionRequests.swift */,
+			2A0878543F5B4636AF1DB547 /* FocusSession.swift */,
+			6FE6C444CF824116A2A283EA /* FocusSessionStatus.swift */,
+							A7D6C5B4E3F2918071625340 /* TimerDurationSelection.swift */,
+				BBAE1A816C5315B03F26F17D /* AuthAPIResponse.swift */,
+				05E972443F630325005FD0A1 /* AuthRequests.swift */,
+				7222508CA67C45161EE0C482 /* AuthSession.swift */,
+				6DB68B2A36FAB7C82B8E0844 /* AuthUser.swift */,
+				EA84152813FFA37FA7FDDC71 /* GuestSessionClaimResponse.swift */,
+				1AEDED15904326F42A56ECF3 /* TimerConfiguration.swift */,
+				BE4B829621B6EDB6802D3AFB /* TimerMode.swift */,
+				4AD7D8F68CE76ABD1E33C10B /* TimerState.swift */,
+				7DA947E09F3F54D7F1CE0AD8 /* TimerStatus.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9AAD9FF097FF7E35EE8B94AB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				373332CA1A758ADB68098D66 /* AppIcon */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		9BD11EDE081373104BC845AB /* Focus */ = {
+			isa = PBXGroup;
+			children = (
+			E874786FB18B45F58E43938A /* FocusSessionStore.swift */,
+				4325CE1735BAEE2D8C174E07 /* FocusHomeView.swift */,
+			);
+			path = Focus;
+			sourceTree = "<group>";
+		};
+		A3C475170E4FF56926DF22BA /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+			11F41D9EF50E4403BE696887 /* VisitorIdentityStore.swift */,
+				4403ABD5F8CB363933AB80A5 /* PersistenceController.swift */,
+				5B3F2773A406D8A8BFD2F2A5 /* PersistenceError.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		C1C37BAACE6B1AFFDECD719B /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				1AE4D1207D99A0C10F7530F6 /* Components */,
+				4C143D504255199E54D7D1F2 /* SettingsModels.swift */,
+				08062F79E8F1CB9F80E2D877 /* SettingsStore.swift */,
+				1241FC1C709CB38A591C765B /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		D296D54397AFA74966745562 /* FocuraIOS */ = {
+			isa = PBXGroup;
+			children = (
+				3D662881897AC6BFAE23EF4F /* App */,
+				687CED7082C3062E026AFB85 /* Core */,
+				E3D44B8B9E298F4B2F481139 /* Domain */,
+				F94541E12FF362973EEFE586 /* Features */,
+				9AAD9FF097FF7E35EE8B94AB /* Resources */,
+				84BB8607B11BBDF477FF2FE6 /* UI */,
+			);
+			path = FocuraIOS;
+			sourceTree = "<group>";
+		};
+		D738E8748194194C502EAA8F /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				7EE36DE9139CFD1BF00A7863 /* AuthenticationState.swift */,
+				57B6F063C1F024F8471FD2CE /* AuthSessionStore.swift */,
+				3BEB650B563AB3EE8489D58E /* RemoteAuthRepository.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		E3D44B8B9E298F4B2F481139 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				95095836A284C5D7CA56D1F8 /* Models */,
+				2D15C1EB8A81CE871E356ED1 /* Services */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		E74393EC80DCAC98EC00F616 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				25EF6535D54E98BC36C0D054 /* AppConfiguration.swift */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		F94541E12FF362973EEFE586 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				8FC06280F49EB0387D1042FC /* Authentication */,
+				9BD11EDE081373104BC845AB /* Focus */,
+				C1C37BAACE6B1AFFDECD719B /* Settings */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		FD7BBAC2C7F35F2BE3A33A36 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				32F59A98EB15F0851270D00F /* KeychainStore.swift */,
+				2885AD4324FB63FC8111A882 /* SecureStore.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		549DC839BC975CC4B9252383 /* FocuraIOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8F5E191064D4F6DA57E36D30 /* Build configuration list for PBXNativeTarget "FocuraIOSTests" */;
+			buildPhases = (
+				68F1307D2854A2EE15657A7A /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5A6689345D86AF35BB2C037C /* PBXTargetDependency */,
+			);
+			name = FocuraIOSTests;
+			packageProductDependencies = (
+			);
+			productName = FocuraIOSTests;
+			productReference = 6FE5878EED2C8F518CA82755 /* FocuraIOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		86FC4D2FCD93B4EBD4DC9CB1 /* FocuraIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F98D0FB2F51F722E3B82ADB7 /* Build configuration list for PBXNativeTarget "FocuraIOS" */;
+			buildPhases = (
+				8146C1EE12AFA8A802FEC291 /* Sources */,
+				46A113615E5B9DDB2D0BA846 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FocuraIOS;
+			packageProductDependencies = (
+			);
+			productName = FocuraIOS;
+			productReference = 4B494B5F0265592B24A57A56 /* FocuraIOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4D0DDDC64BAF5E5ACCE5A074 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					549DC839BC975CC4B9252383 = {
+						DevelopmentTeam = K7D8Z4L88Q;
+						ProvisioningStyle = Automatic;
+					};
+					86FC4D2FCD93B4EBD4DC9CB1 = {
+						DevelopmentTeam = K7D8Z4L88Q;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 483FFDC15CBACC08712263C0 /* Build configuration list for PBXProject "FocuraIOS" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 320BBDDB13339A4E37031D76;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 17C73C6E994749B92DFDC034 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				86FC4D2FCD93B4EBD4DC9CB1 /* FocuraIOS */,
+				549DC839BC975CC4B9252383 /* FocuraIOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		46A113615E5B9DDB2D0BA846 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27B2A9FBF9A7866E4AD986C4 /* focura-icon.svg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		68F1307D2854A2EE15657A7A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			72D8D3353A7D4A65ADA7391C /* TimerDurationSelectionTests.swift in Sources */,
+				44A597C6D8150E817529CC94 /* AuthAPIContractTests.swift in Sources */,
+				A32F52F75AEBE2F1DC264806 /* FocuraIOSTests.swift in Sources */,
+				5C713A6C9CD7451B0EE66E4F /* TimerEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8146C1EE12AFA8A802FEC291 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			DFCE8A934C2E4128B36B05EE /* FocusSessionStore.swift in Sources */,
+			EAE9E80F4AB846BA876C4079 /* RemoteFocusSessionRepository.swift in Sources */,
+			2492FE2B219F442EB04BC3C5 /* FocusSessionRepository.swift in Sources */,
+			BB60CEDE0C564022B6DCD3DE /* VisitorIdentityStore.swift in Sources */,
+			6ECE40CA10644BCA85A0E01C /* FocusSessionRequests.swift in Sources */,
+			E3079ECD006E477892DA61B5 /* FocusSession.swift in Sources */,
+			CBD8C5855CA2485CBC3AF344 /* FocusSessionStatus.swift in Sources */,
+							B8E7D6C5F4A3029182736451 /* TimerDurationSelection.swift in Sources */,
+				B56C75098DEFF4F6D3FE91A8 /* APIClient.swift in Sources */,
+				D777BFC27D8A79FD8CE823B0 /* APIError.swift in Sources */,
+				9F38DE1F2B9D9D6D8F6F6A4B /* APIJSONDecoder.swift in Sources */,
+				533A50D7FFE570A3B257EF16 /* AppConfiguration.swift in Sources */,
+				A9DB1CC6C1C7A77B1A0FDCCB /* AppContainer.swift in Sources */,
+				2E45B2D35518B5DDBEE6E544 /* AppLogger.swift in Sources */,
+				0B17250069992AA5A5DC2500 /* AuthAPIResponse.swift in Sources */,
+				0C1658AB5233B2B1E82D494B /* AuthRepository.swift in Sources */,
+				510A8EA1979AE52FC3D1838C /* AuthRequests.swift in Sources */,
+				D7A4AD6F29BAA1DA60416AF6 /* AuthSession.swift in Sources */,
+				49290A2169233B914285823E /* AuthSessionStore.swift in Sources */,
+				53E764CDA3258934426D0656 /* AuthUser.swift in Sources */,
+				F292BDB859D08FAB3C6993C3 /* AuthenticationState.swift in Sources */,
+				7696EAC036E5DC3F82915948 /* ContentView.swift in Sources */,
+				F792DCB45922AA0450B43431 /* FocuraButtonStyle.swift in Sources */,
+				7243CB7A0FFE6E1B0E7B7598 /* FocuraColors.swift in Sources */,
+				00FBC13CD15ACD3F456A3882 /* FocuraIOSApp.swift in Sources */,
+				C677EDED77EADCDDA0D24DA2 /* FocuraRadius.swift in Sources */,
+				807C8B97D92C7B0A9B3DC887 /* FocuraSpacing.swift in Sources */,
+				EB7C52574D430486573DBF5E /* FocuraTypography.swift in Sources */,
+				61F9A9698ECF4F218D7E6B9F /* FocusHomeView.swift in Sources */,
+				78F0AD871FED89620210218B /* GuestSessionClaimResponse.swift in Sources */,
+				FC3A45B465E033F84975D01D /* HTTPClient.swift in Sources */,
+				EBA393A24DC815E81D823325 /* KeychainStore.swift in Sources */,
+				FE58EEA4A2825E0DDAA4CC51 /* LoginView.swift in Sources */,
+				FEF53ADA88310EC9167A5905 /* PersistenceController.swift in Sources */,
+				98E8CACE2C1CED97A164538E /* PersistenceError.swift in Sources */,
+				91BDE84789B01343EDB63AA3 /* RegisterView.swift in Sources */,
+				F1A99C1C8CDD3153BCC621B2 /* RemoteAuthRepository.swift in Sources */,
+				B9A5AB31B707FD555212DCA4 /* SecureStore.swift in Sources */,
+				1D92844E331DEAA2FA147064 /* SettingsModels.swift in Sources */,
+				7B2E01297D50B0DD1736F5D6 /* SettingsRowView.swift in Sources */,
+				3CDBBD75577D8474A8BCCDCE /* SettingsSectionView.swift in Sources */,
+				7950562994A5B012B323161F /* SettingsStore.swift in Sources */,
+				C4CDABDC9662B62E0A6D60A6 /* SettingsToggleRow.swift in Sources */,
+				63EE6AC861EE302EBC4C9F6E /* SettingsView.swift in Sources */,
+				4AC2E43AA298CEB3C1B9FF20 /* TimerClock.swift in Sources */,
+				6C6BD756958EC5145D91AC97 /* TimerConfiguration.swift in Sources */,
+				F1B33FBF7ED62ED126F2944F /* TimerEngine.swift in Sources */,
+				232E850076B8A871E2760893 /* TimerMode.swift in Sources */,
+				C0E201C62E6B544AE1397560 /* TimerState.swift in Sources */,
+				E28B9F049DA6C8FB0F710256 /* TimerStatus.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5A6689345D86AF35BB2C037C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 86FC4D2FCD93B4EBD4DC9CB1 /* FocuraIOS */;
+			targetProxy = F3D91C525BE0939AA3FCA258 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		46605C4F171041F739E3E79A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Focura;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.focura.FocuraIOS;
+				PRODUCT_MODULE_NAME = FocuraIOS;
+				PRODUCT_NAME = Focura;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		4A37A77C12BB4428BEA77829 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.focura.FocuraIOSTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Focura.app/Focura";
+			};
+			name = Debug;
+		};
+		9CA2587D41DC25683AECC18C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = K7D8Z4L88Q;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		AE30970A40408ED63D4C9925 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = K7D8Z4L88Q;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		C0D2361C8F9B66A7C5168F1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_TESTABILITY = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.focura.FocuraIOSTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Focura.app/Focura";
+			};
+			name = Release;
+		};
+		C0FAD4340279BADE9A3997BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Focura;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.focura.FocuraIOS;
+				PRODUCT_MODULE_NAME = FocuraIOS;
+				PRODUCT_NAME = Focura;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		483FFDC15CBACC08712263C0 /* Build configuration list for PBXProject "FocuraIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE30970A40408ED63D4C9925 /* Debug */,
+				9CA2587D41DC25683AECC18C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8F5E191064D4F6DA57E36D30 /* Build configuration list for PBXNativeTarget "FocuraIOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A37A77C12BB4428BEA77829 /* Debug */,
+				C0D2361C8F9B66A7C5168F1E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F98D0FB2F51F722E3B82ADB7 /* Build configuration list for PBXNativeTarget "FocuraIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0FAD4340279BADE9A3997BB /* Debug */,
+				46605C4F171041F739E3E79A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4D0DDDC64BAF5E5ACCE5A074 /* Project object */;
+}
